@@ -12,17 +12,18 @@ class RaceGameController extends IGame {
   int lives = 4;
   int updateTime = 0;
   var gameState = GameStates.start;
-
   late GameBoard gameBoard;
   late StreetController streetController;
   late Timer frameTimer;
   late Timer gameTimer;
+  late Function updateView;
 
   @override
   void startGame() {
     gameBoard = GameBoard();
     streetController = StreetController(gameBoard);
     streetController.create();
+    //updateView = update;
     //TODO: DEFINE TIME TO START
     gameState = GameStates.play;
     gameTimer = Timer.periodic(const Duration(milliseconds: 100), getElapsedTime);
@@ -40,9 +41,10 @@ class RaceGameController extends IGame {
 
   void builder(Timer timer) {
     if (gameState == GameStates.play) {
-      if (updateTime > 0.2) {
+      if (updateTime > 0.7) {
         streetController.update();
-        gameBoard.printBoard();
+        //gameBoard.printBoard();
+        //updateView();
         updateTime = 0;
       }
     }

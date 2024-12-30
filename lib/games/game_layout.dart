@@ -8,6 +8,8 @@ class GameLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print(size.height);
+    print(size.width);
     return Column(
       children: [
         SizedBox(
@@ -16,14 +18,18 @@ class GameLayout extends StatelessWidget {
         Row(
           children: [
             Container(
-              height: size.height * 0.68,
-              width: size.width * 0.7,
+              //height: size.height * 0.67,
+              height: 600,
+              width: 300,
+              //width: size.height * 0.67 / 2,
               decoration: BoxDecoration(
                 border: Border.all(
                   color: BrickProjectColors.black,
                   width: 4,
+                  strokeAlign: BorderSide.strokeAlignOutside,
                 ),
               ),
+              child: child,
             ),
             Expanded(
               child: Container(

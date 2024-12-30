@@ -21,7 +21,7 @@ class _BrickGamesState extends State<BrickGames> {
         decoration: const BoxDecoration(
           color: BrickProjectColors.background,
         ),
-        child: const RaceGameView(),
+        child: RaceGameView(size: size),
       ),
     );
   }

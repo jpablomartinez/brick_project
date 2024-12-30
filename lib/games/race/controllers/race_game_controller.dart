@@ -10,7 +10,7 @@ class RaceGameController extends IGame {
   int speed = 1;
   int points = 0;
   int lives = 4;
-  int updateTime = 0;
+  double updateTime = 0;
   var gameState = GameStates.start;
   late GameBoard gameBoard;
   late StreetController streetController;
@@ -19,11 +19,11 @@ class RaceGameController extends IGame {
   late Function updateView;
 
   @override
-  void startGame() {
+  void startGame(Function updateV) {
     gameBoard = GameBoard();
     streetController = StreetController(gameBoard);
     streetController.create();
-    //updateView = update;
+    updateView = updateV;
     //TODO: DEFINE TIME TO START
     gameState = GameStates.play;
     gameTimer = Timer.periodic(const Duration(milliseconds: 100), getElapsedTime);
@@ -32,20 +32,31 @@ class RaceGameController extends IGame {
 
   @override
   void update() {
-    frameTimer = Timer.periodic(Duration(milliseconds: (fps * 1000).floor()), builder);
+    frameTimer = Timer.periodic(Duration(milliseconds: (1000 / 60).floor()), (timer) {
+      print('frame runnig');
+      builder(timer);
+    });
   }
 
   void getElapsedTime(Timer timer) {
-    updateTime++;
+    updateTime += 0.1;
+    print('time: ${updateTime}');
+  }
+
+  void updateFrame() {
+    print('updating...');
+    updateView();
   }
 
   void builder(Timer timer) {
+    print('state; ${gameState}');
     if (gameState == GameStates.play) {
-      if (updateTime > 0.7) {
+      if (updateTime >= 0.4) {
         streetController.update();
         //gameBoard.printBoard();
-        //updateView();
+        updateFrame();
         updateTime = 0;
+        print("aaa");
       }
     }
   }

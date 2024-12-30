@@ -19,7 +19,7 @@ class _RaceGameState extends State<RaceGameView> {
   @override
   void initState() {
     raceGameController = RaceGameController();
-    raceGameController.startGame();
+    raceGameController.startGame(() => update());
     board = draw();
     super.initState();
   }
@@ -58,6 +58,12 @@ class _RaceGameState extends State<RaceGameView> {
       cols = [];
     }
     return Column(children: rows);
+  }
+
+  void update() {
+    setState(() {
+      board = draw();
+    });
   }
 
   @override

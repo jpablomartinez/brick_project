@@ -17,7 +17,7 @@ class GameLayout extends StatelessWidget {
           children: [
             Container(
               height: size.height * 0.68,
-              width: size.width * 0.65,
+              width: size.width * 0.7,
               decoration: BoxDecoration(
                 border: Border.all(
                   color: BrickProjectColors.black,
@@ -26,29 +26,110 @@ class GameLayout extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: SizedBox(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 height: size.height * 0.68,
-                child: const Column(
+                child: Column(
                   children: [
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(
-                          '0',
-                          style: TextStyle(
-                            color: BrickProjectColors.black,
-                            fontFamily: 'Digital',
-                            fontSize: 40,
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: const Text(
+                            '0',
+                            style: TextStyle(
+                              color: BrickProjectColors.black,
+                              fontFamily: 'Digital',
+                              fontSize: 40,
+                            ),
                           ),
                         ),
-                        Text(
-                          'SCORE',
-                          style: TextStyle(
-                            color: BrickProjectColors.black,
-                            //fontFamily: 'Roboto',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            'SCORE',
+                            style: TextStyle(
+                              color: BrickProjectColors.black,
+                              //fontFamily: 'Roboto',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: size.height * 0.05),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: const Text(
+                        'LIVES',
+                        style: TextStyle(
+                          color: BrickProjectColors.black,
+                          //fontFamily: 'Roboto',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.2),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              alignment: Alignment.topRight,
+                              child: const Text(
+                                '1',
+                                style: TextStyle(
+                                  color: BrickProjectColors.black,
+                                  fontFamily: 'Digital',
+                                  fontSize: 40,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: const Text(
+                                'SPEED',
+                                style: TextStyle(
+                                  color: BrickProjectColors.black,
+                                  //fontFamily: 'Roboto',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Text(
+                                '1',
+                                style: TextStyle(
+                                  color: BrickProjectColors.black,
+                                  fontFamily: 'Digital',
+                                  fontSize: 40,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: const Text(
+                                'LEVEL',
+                                style: TextStyle(
+                                  color: BrickProjectColors.black,
+                                  //fontFamily: 'Roboto',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     )

@@ -1,5 +1,5 @@
 import 'package:brick_project/colors.dart';
-import 'package:brick_project/games/game_layout.dart';
+import 'package:brick_project/games/race/race_game_view.dart';
 import 'package:flutter/material.dart';
 
 class BrickGames extends StatefulWidget {
@@ -21,7 +21,7 @@ class _BrickGamesState extends State<BrickGames> {
         decoration: const BoxDecoration(
           color: BrickProjectColors.background,
         ),
-        child: const GameLayout(child: SizedBox()),
+        child: const RaceGameView(),
       ),
     );
   }

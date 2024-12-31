@@ -1,61 +1,98 @@
+import 'package:brick_project/colors.dart';
 import 'package:flutter/material.dart';
 
 class Gamepad extends StatelessWidget {
-  const Gamepad({super.key});
+  final Function leftButton;
+  final Function rightButton;
+  final Function topButton;
+  final Function bottomButton;
+
+  const Gamepad({
+    super.key,
+    required this.leftButton,
+    required this.topButton,
+    required this.rightButton,
+    required this.bottomButton,
+  });
+
+  final double gamepadWidth = 150;
+  final double gamepadHeight = 150;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.yellow,
-      width: 160,
-      height: 140,
+      width: gamepadWidth,
+      height: gamepadHeight,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: BrickProjectColors.black,
+          width: 4,
+        ),
+      ),
       child: Stack(
         children: [
+          //top button
           Positioned(
-            top: 0,
-            left: 60,
+            top: 8,
+            left: gamepadWidth / 3,
             child: GestureDetector(
-              onTap: () {},
+              onTap: () => topButton(),
               child: Container(
-                width: 30,
-                height: 30,
-                color: Colors.red,
+                width: 40,
+                height: 40,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: BrickProjectColors.black,
+                ),
               ),
             ),
           ),
+          //bottom button
           Positioned(
-            top: 50,
-            left: 0,
+            bottom: 8,
+            left: gamepadWidth / 3,
             child: GestureDetector(
-              onTap: () {},
+              onTap: () => bottomButton(),
               child: Container(
-                width: 30,
-                height: 30,
-                color: Colors.blue,
+                width: 40,
+                height: 40,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: BrickProjectColors.black,
+                ),
               ),
             ),
           ),
+          //left button
           Positioned(
-            bottom: 0,
-            left: 60,
+            top: gamepadHeight / 3,
+            left: 8,
             child: GestureDetector(
-              onTap: () {},
+              onTap: () => leftButton(),
               child: Container(
-                width: 30,
-                height: 30,
-                color: Colors.red,
+                width: 40,
+                height: 40,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: BrickProjectColors.black,
+                ),
               ),
             ),
           ),
+          //rigth button
           Positioned(
-            top: 50,
-            right: 0,
+            top: gamepadHeight / 3,
+            right: 8,
             child: GestureDetector(
-              onTap: () {},
+              onTap: () => rightButton(),
               child: Container(
-                width: 30,
-                height: 30,
-                color: Colors.blue,
+                width: 40,
+                height: 40,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: BrickProjectColors.black,
+                ),
               ),
             ),
           ),

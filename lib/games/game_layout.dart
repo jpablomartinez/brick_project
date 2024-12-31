@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 
 class GameLayout extends StatelessWidget {
   final Widget child;
-  const GameLayout({super.key, required this.child});
+  final Widget gamepad;
+  const GameLayout({
+    super.key,
+    required this.child,
+    required this.gamepad,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +17,7 @@ class GameLayout extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: size.height * 0.1,
+          height: size.height * 0.07,
         ),
         Row(
           children: [
@@ -145,10 +150,13 @@ class GameLayout extends StatelessWidget {
           ],
         ),
         const SizedBox(
+          height: 15,
+        ),
+        SizedBox(
           child: Row(
             children: [
               //options
-              Gamepad(),
+              gamepad,
             ],
           ),
         ),

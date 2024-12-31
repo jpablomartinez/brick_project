@@ -1,6 +1,7 @@
 import 'package:brick_project/core/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
 import 'package:brick_project/games/race/controllers/race_game_controller.dart';
+import 'package:brick_project/widgets/gamepad.dart';
 import 'package:brick_project/widgets/square.dart';
 import 'package:flutter/material.dart';
 
@@ -69,6 +70,12 @@ class _RaceGameState extends State<RaceGameView> {
   @override
   Widget build(BuildContext context) {
     return GameLayout(
+      gamepad: Gamepad(
+        leftButton: () => raceGameController.moveToLeft(),
+        topButton: () {},
+        rightButton: () => raceGameController.moveToRight(),
+        bottomButton: () {},
+      ),
       child: Container(
         child: board,
       ),

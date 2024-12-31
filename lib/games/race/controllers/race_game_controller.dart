@@ -41,6 +41,18 @@ class RaceGameController extends IGame {
     });
   }
 
+  void moveToLeft() {
+    if (gameState == GameStates.play) {
+      player.moveToLeft();
+    }
+  }
+
+  void moveToRight() {
+    if (gameState == GameStates.play) {
+      player.moveToRight();
+    }
+  }
+
   void getElapsedTime(Timer timer) {
     updateTime += 0.1;
   }
@@ -54,9 +66,9 @@ class RaceGameController extends IGame {
       if (updateTime >= 0.2) {
         streetController.update();
         //gameBoard.printBoard();
-        updateFrame();
         updateTime = 0;
       }
+      updateFrame();
     }
   }
 }

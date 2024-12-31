@@ -1,4 +1,5 @@
 import 'package:brick_project/colors.dart';
+import 'package:brick_project/widgets/gamepad.dart';
 import 'package:flutter/material.dart';
 
 class GameLayout extends StatelessWidget {
@@ -8,8 +9,6 @@ class GameLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print(size.height);
-    print(size.width);
     return Column(
       children: [
         SizedBox(
@@ -145,8 +144,13 @@ class GameLayout extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          color: Colors.blue,
+        const SizedBox(
+          child: Row(
+            children: [
+              //options
+              Gamepad(),
+            ],
+          ),
         ),
       ],
     );

@@ -1,10 +1,11 @@
 import 'dart:async';
-
+import 'dart:math' as math;
 import 'package:brick_project/core/constants.dart';
 import 'package:brick_project/core/game_board.dart';
 import 'package:brick_project/core/i_game.dart';
 import 'package:brick_project/games/race/controllers/street_controller.dart';
 import 'package:brick_project/games/race/models/car.dart';
+import 'package:brick_project/games/race/models/npc_car.dart';
 
 class RaceGameController extends IGame {
   int level = 1;
@@ -12,6 +13,7 @@ class RaceGameController extends IGame {
   int points = 0;
   int lives = 4;
   double updateTime = 0;
+  double waitTime = 0;
   var gameState = GameStates.start;
   late GameBoard gameBoard;
   late StreetController streetController;
@@ -19,6 +21,7 @@ class RaceGameController extends IGame {
   late Timer gameTimer;
   late Function updateView;
   late Car player;
+  late List<NpcCar> cars;
 
   @override
   void startGame(Function frameUpdate) {
@@ -27,10 +30,13 @@ class RaceGameController extends IGame {
     streetController.create();
     updateView = frameUpdate;
     player = Car(true, gameBoard);
+    int first = math.Random().nextInt(10); // Value is >= 0 and < 10.
+    int second = math.Random().nextInt(10); // Value is >= 0 and < 10.
+    cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
+
     //TODO: DEFINE TIME TO START
     gameState = GameStates.play;
-
-    gameTimer = Timer.periodic(const Duration(milliseconds: 100), getElapsedTime);
+    gameTimer = Timer.periodic(Duration(milliseconds: (1000 * fps).floor()), getElapsedTime);
     update();
   }
 
@@ -53,9 +59,7 @@ class RaceGameController extends IGame {
     }
   }
 
-  void getElapsedTime(Timer timer) {
-    updateTime += 0.1;
-  }
+  void getElapsedTime(Timer timer) {}
 
   void updateFrame() {
     updateView();
@@ -63,10 +67,24 @@ class RaceGameController extends IGame {
 
   void builder(Timer timer) {
     if (gameState == GameStates.play) {
-      if (updateTime >= 0.2) {
+      updateTime++;
+      waitTime++;
+      if (updateTime >= 9) {
         streetController.update();
         //gameBoard.printBoard();
+        for (final car in cars) {
+          if (car.ready) {
+            car.clear();
+            car.move();
+          }
+        }
         updateTime = 0;
+        for (final car in cars) {
+          if (!car.ready) {
+            car.ready = true;
+            car.column = math.Random().nextInt(10) <= 4 ? 3 : 6;
+          }
+        }
       }
       updateFrame();
     }

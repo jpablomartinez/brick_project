@@ -11,9 +11,9 @@ class RaceGameController extends IGame {
   int level = 1;
   int speed = 1;
   int points = 0;
-  int lives = 4;
+  int lives = raceCarGameLives;
   double updateTime = 0;
-  double waitTime = 0;
+  double gameTime = 0;
   var gameState = GameStates.start;
   late GameBoard gameBoard;
   late StreetController streetController;
@@ -25,6 +25,7 @@ class RaceGameController extends IGame {
   @override
   void startGame(Function frameUpdate) {
     gameBoard = GameBoard();
+    restart();
     streetController = StreetController(gameBoard);
     streetController.create();
     updateView = frameUpdate;
@@ -32,7 +33,6 @@ class RaceGameController extends IGame {
     int first = math.Random().nextInt(10); // Value is >= 0 and < 10.
     int second = math.Random().nextInt(10); // Value is >= 0 and < 10.
     cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
-
     //TODO: DEFINE TIME TO START
     gameState = GameStates.play;
     update();
@@ -43,6 +43,14 @@ class RaceGameController extends IGame {
     frameTimer = Timer.periodic(Duration(milliseconds: (1000 * fps).floor()), (timer) {
       builder(timer);
     });
+  }
+
+  //TODO: ADD TO INTERFACE IGAME
+  void restart() {
+    points = 0;
+    lives = raceCarGameLives;
+    speed = 1;
+    level = 1;
   }
 
   void moveToLeft() {
@@ -61,10 +69,11 @@ class RaceGameController extends IGame {
     updateView();
   }
 
+  //TODO: ADD TO INTERFACE IGAME
   void builder(Timer timer) {
     if (gameState == GameStates.play) {
       updateTime++;
-      waitTime++;
+      gameTime += (1000 / 60);
       if (updateTime >= 5) {
         streetController.update();
         //gameBoard.printBoard();
@@ -82,6 +91,9 @@ class RaceGameController extends IGame {
             cars[(i + 1) % cars.length].column = NpcCar.getStartPosition(math.Random().nextInt(10));
           }
         }
+      }
+      if ((gameTime / 1000).floor() > points) {
+        points++;
       }
       updateFrame();
     }

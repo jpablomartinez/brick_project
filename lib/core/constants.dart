@@ -8,3 +8,5 @@ enum GameStates {
   gameover,
   win,
 }
+
+const int raceCarGameLives = 4;

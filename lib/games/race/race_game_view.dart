@@ -76,6 +76,10 @@ class _RaceGameState extends State<RaceGameView> {
         rightButton: () => raceGameController.moveToRight(),
         bottomButton: () {},
       ),
+      points: raceGameController.points,
+      lives: raceGameController.lives,
+      speed: raceGameController.speed,
+      level: raceGameController.level,
       child: Container(
         child: board,
       ),

@@ -26,7 +26,6 @@ class NpcCar {
     if (ready) {
       if (positions[3] == 20 && positions[7] == 20 && positions[11] == 20 && positions[15] == 20) {
         ready = false;
-        print('HEERE');
         restart();
       }
     }

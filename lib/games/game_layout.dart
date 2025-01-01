@@ -4,10 +4,18 @@ import 'package:flutter/material.dart';
 class GameLayout extends StatelessWidget {
   final Widget child;
   final Widget gamepad;
+  final int points;
+  final int lives;
+  final int speed;
+  final int level;
   const GameLayout({
     super.key,
     required this.child,
     required this.gamepad,
+    required this.lives,
+    required this.points,
+    required this.speed,
+    required this.level,
   });
 
   @override
@@ -44,9 +52,9 @@ class GameLayout extends StatelessWidget {
                       children: [
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            '0',
-                            style: TextStyle(
+                          child: Text(
+                            '$points',
+                            style: const TextStyle(
                               color: BrickProjectColors.black,
                               fontFamily: 'Digital',
                               fontSize: 40,
@@ -89,9 +97,9 @@ class GameLayout extends StatelessWidget {
                           children: [
                             Container(
                               alignment: Alignment.topRight,
-                              child: const Text(
-                                '1',
-                                style: TextStyle(
+                              child: Text(
+                                '$speed',
+                                style: const TextStyle(
                                   color: BrickProjectColors.black,
                                   fontFamily: 'Digital',
                                   fontSize: 40,
@@ -117,9 +125,9 @@ class GameLayout extends StatelessWidget {
                           children: [
                             Container(
                               alignment: Alignment.centerRight,
-                              child: const Text(
-                                '1',
-                                style: TextStyle(
+                              child: Text(
+                                '$level',
+                                style: const TextStyle(
                                   color: BrickProjectColors.black,
                                   fontFamily: 'Digital',
                                   fontSize: 40,

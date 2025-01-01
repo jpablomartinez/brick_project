@@ -1,5 +1,4 @@
 import 'package:brick_project/colors.dart';
-import 'package:brick_project/widgets/gamepad.dart';
 import 'package:flutter/material.dart';
 
 class GameLayout extends StatelessWidget {

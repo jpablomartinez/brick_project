@@ -18,7 +18,6 @@ class RaceGameController extends IGame {
   late GameBoard gameBoard;
   late StreetController streetController;
   late Timer frameTimer;
-  late Timer gameTimer;
   late Function updateView;
   late Car player;
   late List<NpcCar> cars;
@@ -36,7 +35,6 @@ class RaceGameController extends IGame {
 
     //TODO: DEFINE TIME TO START
     gameState = GameStates.play;
-    gameTimer = Timer.periodic(Duration(milliseconds: (1000 * fps).floor()), getElapsedTime);
     update();
   }
 
@@ -59,8 +57,6 @@ class RaceGameController extends IGame {
     }
   }
 
-  void getElapsedTime(Timer timer) {}
-
   void updateFrame() {
     updateView();
   }
@@ -69,7 +65,7 @@ class RaceGameController extends IGame {
     if (gameState == GameStates.play) {
       updateTime++;
       waitTime++;
-      if (updateTime >= 9) {
+      if (updateTime >= 5) {
         streetController.update();
         //gameBoard.printBoard();
         for (final car in cars) {
@@ -79,10 +75,11 @@ class RaceGameController extends IGame {
           }
         }
         updateTime = 0;
-        for (final car in cars) {
-          if (!car.ready) {
-            car.ready = true;
-            car.column = math.Random().nextInt(10) <= 4 ? 3 : 6;
+        for (int i = 0; i < cars.length; i++) {
+          final car = cars[i];
+          if (car.positions[3] == 12 && !cars[(i + 1) % cars.length].ready) {
+            cars[(i + 1) % cars.length].ready = true;
+            cars[(i + 1) % cars.length].column = NpcCar.getStartPosition(math.Random().nextInt(10));
           }
         }
       }

@@ -9,9 +9,13 @@ class NpcCar {
   List<int> positions = [1, 0, 1, 0, 0, 1, 0, -1, 1, 1, 1, -2, 0, 1, 0, -3];
 
   NpcCar(int value, GameBoard board, {bool r = true}) {
-    column = value <= 4 ? 3 : 6;
+    column = getStartPosition(value);
     gameBoard = board;
     ready = r;
+  }
+
+  static int getStartPosition(int value) {
+    return value <= 4 ? 3 : 6;
   }
 
   void restart() {
@@ -22,6 +26,7 @@ class NpcCar {
     if (ready) {
       if (positions[3] == 20 && positions[7] == 20 && positions[11] == 20 && positions[15] == 20) {
         ready = false;
+        print('HEERE');
         restart();
       }
     }
@@ -40,16 +45,23 @@ class NpcCar {
   }
 
   void move() {
-    for (int i = 1; i < positions.length; i += 4) {
-      int pos = positions[i + 2];
-      if (pos >= 0 && pos < 20) {
-        gameBoard.board[pos][column - 1] = positions[i - 1];
-        gameBoard.board[pos][column] = positions[i];
-        gameBoard.board[pos][column + 1] = positions[i + 1];
-      }
-      if (positions[i + 2] < 20) {
-        positions[i + 2] = positions[i + 2] + 1;
+    if (ready) {
+      for (int i = 1; i < positions.length; i += 4) {
+        int pos = positions[i + 2];
+        if (pos >= 0 && pos < 20) {
+          gameBoard.board[pos][column - 1] = positions[i - 1];
+          gameBoard.board[pos][column] = positions[i];
+          gameBoard.board[pos][column + 1] = positions[i + 1];
+        }
+        if (positions[i + 2] < 20) {
+          positions[i + 2] = positions[i + 2] + 1;
+        }
       }
     }
+  }
+
+  @override
+  String toString() {
+    return 'ready: $ready / column: $column';
   }
 }

@@ -45,7 +45,7 @@ class RaceGameController extends IGame {
     });
   }
 
-  //TODO: ADD TO INTERFACE IGAME
+  @override
   void restart() {
     points = 0;
     lives = raceCarGameLives;
@@ -69,14 +69,20 @@ class RaceGameController extends IGame {
     updateView();
   }
 
-  //TODO: ADD TO INTERFACE IGAME
+  @override
+  void updatePoints() {
+    if ((gameTime / 1000).floor() > points) {
+      points++;
+    }
+  }
+
+  @override
   void builder(Timer timer) {
     if (gameState == GameStates.play) {
       updateTime++;
       gameTime += (1000 / 60);
       if (updateTime >= 5) {
         streetController.update();
-        //gameBoard.printBoard();
         for (final car in cars) {
           if (car.ready) {
             car.clear();
@@ -87,14 +93,11 @@ class RaceGameController extends IGame {
         for (int i = 0; i < cars.length; i++) {
           final car = cars[i];
           if (car.positions[3] == 12 && !cars[(i + 1) % cars.length].ready) {
-            cars[(i + 1) % cars.length].ready = true;
-            cars[(i + 1) % cars.length].column = NpcCar.getStartPosition(math.Random().nextInt(10));
+            cars[(i + 1) % cars.length].start(math.Random().nextInt(10));
           }
         }
       }
-      if ((gameTime / 1000).floor() > points) {
-        points++;
-      }
+      updatePoints();
       updateFrame();
     }
   }

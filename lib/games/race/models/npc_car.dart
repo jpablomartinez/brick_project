@@ -18,6 +18,11 @@ class NpcCar {
     return value <= 4 ? 3 : 6;
   }
 
+  void start(int random) {
+    ready = true;
+    column = getStartPosition(random);
+  }
+
   void restart() {
     positions = [1, 0, 1, 0, 0, 1, 0, -1, 1, 1, 1, -2, 0, 1, 0, -3];
   }

@@ -12,6 +12,8 @@ class RaceGameController extends IGame {
   int speed = 1;
   int points = 0;
   int lives = raceCarGameLives;
+  int avoidedCars = 0;
+  int carsToAvoid = 0;
   double updateTime = 0;
   double gameTime = 0;
   var gameState = GameStates.start;
@@ -53,22 +55,6 @@ class RaceGameController extends IGame {
     level = 1;
   }
 
-  void moveToLeft() {
-    if (gameState == GameStates.play) {
-      player.moveToLeft();
-    }
-  }
-
-  void moveToRight() {
-    if (gameState == GameStates.play) {
-      player.moveToRight();
-    }
-  }
-
-  void updateFrame() {
-    updateView();
-  }
-
   @override
   void updatePoints() {
     if ((gameTime / 1000).floor() > points) {
@@ -77,11 +63,36 @@ class RaceGameController extends IGame {
   }
 
   @override
+  void updateLevel() {
+    List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    List<int> raceCarGameLevels = [
+      raceCarGameSecondsPerLevel_1,
+      raceCarGameSecondsPerLevel_2,
+      raceCarGameSecondsPerLevel_3,
+      raceCarGameSecondsPerLevel_4,
+      raceCarGameSecondsPerLevel_5,
+      raceCarGameSecondsPerLevel_6,
+      raceCarGameSecondsPerLevel_7,
+      raceCarGameSecondsPerLevel_8,
+      raceCarGameSecondsPerLevel_9,
+      raceCarGameSecondsPerLevel_10,
+    ];
+    for (int i = 0; i < levels.length - 1; i++) {
+      if (level == levels[i] && (gameTime / 1000).floor() == raceCarGameLevels[i]) {
+        level++;
+        if (level % 2 == 0) {
+          speed++;
+        }
+      }
+    }
+  }
+
+  @override
   void builder(Timer timer) {
     if (gameState == GameStates.play) {
       updateTime++;
       gameTime += (1000 / 60);
-      if (updateTime >= 5) {
+      if (updateTime >= 8 - speed) {
         streetController.update();
         for (final car in cars) {
           if (car.ready) {
@@ -97,8 +108,43 @@ class RaceGameController extends IGame {
           }
         }
       }
+      checkGameOver();
+      checkWin();
+      updateLevel();
       updatePoints();
-      updateFrame();
     }
+    updateFrame();
+  }
+
+  @override
+  void checkGameOver() {
+    //CHECK COLLISIONS AND LIVES
+    if (lives == 0) {
+      //TRIGGER GAME OVER
+      gameState = GameStates.gameover;
+    }
+  }
+
+  @override
+  void checkWin() {
+    if (level == 10 && (gameTime / 1000).floor() == raceCarGameSecondsPerLevel_10) {
+      gameState = GameStates.win;
+    }
+  }
+
+  void moveToLeft() {
+    if (gameState == GameStates.play) {
+      player.moveToLeft();
+    }
+  }
+
+  void moveToRight() {
+    if (gameState == GameStates.play) {
+      player.moveToRight();
+    }
+  }
+
+  void updateFrame() {
+    updateView();
   }
 }

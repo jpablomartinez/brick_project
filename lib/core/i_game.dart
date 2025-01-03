@@ -8,4 +8,7 @@ abstract class IGame {
   void update();
   void restart();
   void updatePoints();
+  void updateLevel();
+  void checkGameOver();
+  void checkWin();
 }

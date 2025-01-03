@@ -15,7 +15,7 @@ class RaceGameView extends StatefulWidget {
 
 class _RaceGameState extends State<RaceGameView> {
   late RaceGameController raceGameController;
-  late Widget board;
+  Widget board = const SizedBox();
 
   @override
   void initState() {
@@ -42,15 +42,15 @@ class _RaceGameState extends State<RaceGameView> {
         if (raceGameController.gameBoard.board[i][j] == 1) {
           cols.add(
             const Square(
-              width: 30,
-              height: 30,
+              width: 27,
+              height: 27,
             ),
           );
         } else {
           cols.add(
             const BackgroundSquare(
-              width: 30,
-              height: 30,
+              width: 27,
+              height: 27,
             ),
           );
         }
@@ -59,6 +59,78 @@ class _RaceGameState extends State<RaceGameView> {
       cols = [];
     }
     return Column(children: rows);
+  }
+
+  Widget renderLives() {
+    List<Widget> col = [];
+    for (int i = 4; i > 0; i--) {
+      if (i <= raceGameController.lives) {
+        col.add(
+          const Square(
+            width: 27,
+            height: 27,
+          ),
+        );
+      } else {
+        col.add(
+          const BackgroundSquare(
+            width: 27,
+            height: 27,
+          ),
+        );
+      }
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        const Column(
+          children: [
+            BackgroundSquare(
+              width: 27,
+              height: 27,
+            ),
+            BackgroundSquare(
+              width: 27,
+              height: 27,
+            ),
+            BackgroundSquare(
+              width: 27,
+              height: 27,
+            ),
+            BackgroundSquare(
+              width: 27,
+              height: 27,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Column(children: col),
+            Column(children: col),
+          ],
+        ),
+        const Column(
+          children: [
+            BackgroundSquare(
+              width: 28,
+              height: 28,
+            ),
+            BackgroundSquare(
+              width: 28,
+              height: 28,
+            ),
+            BackgroundSquare(
+              width: 28,
+              height: 28,
+            ),
+            BackgroundSquare(
+              width: 28,
+              height: 28,
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   void update() {
@@ -77,7 +149,7 @@ class _RaceGameState extends State<RaceGameView> {
         bottomButton: () {},
       ),
       points: raceGameController.points,
-      lives: raceGameController.lives,
+      lives: renderLives(),
       speed: raceGameController.speed,
       level: raceGameController.level,
       child: Container(

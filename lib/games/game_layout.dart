@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class GameLayout extends StatelessWidget {
   final Widget child;
   final Widget gamepad;
+  final Widget lives;
   final int points;
-  final int lives;
   final int speed;
   final int level;
   const GameLayout({
@@ -30,8 +30,8 @@ class GameLayout extends StatelessWidget {
           children: [
             Container(
               //height: size.height * 0.67,
-              height: 600,
-              width: 300,
+              height: 540,
+              width: 270,
               //width: size.height * 0.67 / 2,
               decoration: BoxDecoration(
                 border: Border.all(
@@ -88,9 +88,11 @@ class GameLayout extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    lives,
                     SizedBox(height: size.height * 0.2),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,

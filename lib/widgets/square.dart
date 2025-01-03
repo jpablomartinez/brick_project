@@ -23,7 +23,7 @@ class Square extends StatelessWidget {
         height: height - 2,
         color: BrickProjectColors.black,
         child: Container(
-          margin: const EdgeInsets.all(4.0),
+          margin: const EdgeInsets.all(3.0),
           color: BrickProjectColors.background,
           child: Container(
             margin: const EdgeInsets.all(3.0),
@@ -57,7 +57,7 @@ class BackgroundSquare extends StatelessWidget {
         height: height - 2,
         color: BrickProjectColors.black.withOpacity(0.04),
         child: Container(
-          margin: const EdgeInsets.all(4.0),
+          margin: const EdgeInsets.all(3.0),
           color: BrickProjectColors.background,
           child: Container(
             margin: const EdgeInsets.all(3.0),

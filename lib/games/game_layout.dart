@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class GameLayout extends StatelessWidget {
   final Widget child;
   final Widget gamepad;
+  final Widget gamepadActions;
   final Widget lives;
   final int points;
   final int speed;
@@ -12,6 +13,7 @@ class GameLayout extends StatelessWidget {
     super.key,
     required this.child,
     required this.gamepad,
+    required this.gamepadActions,
     required this.lives,
     required this.points,
     required this.speed,
@@ -33,7 +35,7 @@ class GameLayout extends StatelessWidget {
             decoration: BoxDecoration(
               color: BrickProjectColors.background,
               border: Border.all(
-                color: const Color.fromARGB(255, 53, 52, 52),
+                color: const Color.fromARGB(255, 62, 63, 65),
                 width: 3,
                 strokeAlign: BorderSide.strokeAlignInside,
               ),
@@ -179,80 +181,7 @@ class GameLayout extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(bottom: 0, top: 16),
             width: size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color.fromARGB(255, 223, 207, 87),
-                        border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
-                      ),
-                    ),
-                    const Text(
-                      'SOUND',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 226, 231, 233),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color.fromARGB(255, 223, 207, 87),
-                        border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
-                      ),
-                    ),
-                    const Text(
-                      'ON/OFF',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 226, 231, 233),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color.fromARGB(255, 223, 207, 87),
-                        border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
-                      ),
-                    ),
-                    const Text(
-                      'RESET',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 226, 231, 233),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              ],
-            ),
+            child: gamepadActions,
           ),
           Container(
             padding: const EdgeInsets.only(

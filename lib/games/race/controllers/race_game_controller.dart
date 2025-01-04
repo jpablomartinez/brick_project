@@ -145,4 +145,14 @@ class RaceGameController extends IGame {
   void updateFrame() {
     updateView();
   }
+
+  @override
+  void pause() {
+    gameState = GameStates.pause;
+  }
+
+  @override
+  void play() {
+    gameState = GameStates.play;
+  }
 }

@@ -3,6 +3,7 @@ import 'package:brick_project/core/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
 import 'package:brick_project/games/race/controllers/race_game_controller.dart';
 import 'package:brick_project/widgets/gamepad.dart';
+import 'package:brick_project/widgets/gamepad_actions.dart';
 import 'package:brick_project/widgets/square.dart';
 import 'package:flutter/material.dart';
 
@@ -153,6 +154,18 @@ class _RaceGameState extends State<RaceGameView> {
       lives: renderLives(),
       speed: raceGameController.speed,
       level: raceGameController.level,
+      gamepadActions: GamepadActions(
+        soundHandler: () {},
+        onOffHandler: () {},
+        resetHandler: () {},
+        pauseHandler: () {
+          if (raceGameController.gameState == GameStates.pause) {
+            raceGameController.play();
+          } else if (raceGameController.gameState == GameStates.play) {
+            raceGameController.pause();
+          }
+        },
+      ),
       child: Container(
         color: BrickProjectColors.background,
         child: board,

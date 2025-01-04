@@ -11,4 +11,6 @@ abstract class IGame {
   void updateLevel();
   void checkGameOver();
   void checkWin();
+  void pause();
+  void play();
 }

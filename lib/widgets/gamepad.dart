@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:brick_project/widgets/gamepad_button.dart';
 import 'package:flutter/material.dart';
 
 class Gamepad extends StatelessWidget {
@@ -34,9 +35,9 @@ class Gamepad extends StatelessWidget {
                 right: gamepadWidth / 3,
                 child: GestureDetector(
                   onTap: () => topButton(),
-                  child: Column(
+                  child: const Column(
                     children: [
-                      const Text(
+                      Text(
                         'UP',
                         style: TextStyle(
                           color: Color.fromARGB(255, 226, 231, 233),
@@ -45,16 +46,10 @@ class Gamepad extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 4),
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color.fromARGB(255, 223, 207, 87),
-                          border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
-                        ),
-                      ),
+                      GamepadButton(
+                        margin: EdgeInsets.only(top: 4),
+                        size: Size(40, 40),
+                      )
                     ],
                   ),
                 ),
@@ -66,19 +61,13 @@ class Gamepad extends StatelessWidget {
                 right: gamepadWidth / 3,
                 child: GestureDetector(
                   onTap: () => bottomButton(),
-                  child: Column(
+                  child: const Column(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 4),
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color.fromARGB(255, 223, 207, 87),
-                          border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
-                        ),
+                      GamepadButton(
+                        margin: EdgeInsets.only(bottom: 4),
+                        size: Size(40, 40),
                       ),
-                      const Text(
+                      Text(
                         'BOTTOM',
                         style: TextStyle(
                           color: Color.fromARGB(255, 226, 231, 233),
@@ -107,19 +96,13 @@ class Gamepad extends StatelessWidget {
                 left: 4,
                 child: GestureDetector(
                   onTap: () => leftButton(),
-                  child: Column(
+                  child: const Column(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 4),
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color.fromARGB(255, 223, 207, 87),
-                          border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
-                        ),
+                      GamepadButton(
+                        margin: EdgeInsets.only(bottom: 4),
+                        size: Size(40, 40),
                       ),
-                      const Text(
+                      Text(
                         'LEFT',
                         style: TextStyle(
                           color: Color.fromARGB(255, 226, 231, 233),
@@ -138,19 +121,13 @@ class Gamepad extends StatelessWidget {
                 right: 4,
                 child: GestureDetector(
                   onTap: () => rightButton(),
-                  child: Column(
+                  child: const Column(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 4),
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color.fromARGB(255, 223, 207, 87),
-                          border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
-                        ),
+                      GamepadButton(
+                        margin: EdgeInsets.only(bottom: 4),
+                        size: Size(40, 40),
                       ),
-                      const Text(
+                      Text(
                         'RIGHT',
                         style: TextStyle(
                           color: Color.fromARGB(255, 226, 231, 233),
@@ -183,19 +160,13 @@ class Gamepad extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {},
-          child: Column(
+          child: const Column(
             children: [
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 223, 207, 87),
-                  border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
-                  shape: BoxShape.circle,
-                ),
+              GamepadButton(
+                size: Size(80, 80),
+                margin: EdgeInsets.symmetric(vertical: 8),
               ),
-              const Text(
+              Text(
                 'ROTATE \nDIRECTION',
                 style: TextStyle(
                   color: Color.fromARGB(255, 226, 231, 233),

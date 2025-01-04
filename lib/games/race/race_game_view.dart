@@ -1,3 +1,4 @@
+import 'package:brick_project/colors.dart';
 import 'package:brick_project/core/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
 import 'package:brick_project/games/race/controllers/race_game_controller.dart';
@@ -153,6 +154,7 @@ class _RaceGameState extends State<RaceGameView> {
       speed: raceGameController.speed,
       level: raceGameController.level,
       child: Container(
+        color: BrickProjectColors.background,
         child: board,
       ),
     );

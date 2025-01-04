@@ -12,11 +12,22 @@ class RaceGameController extends IGame {
   int speed = 1;
   int points = 0;
   int lives = raceCarGameLives;
-  int avoidedCars = 0;
-  int carsToAvoid = 0;
   double updateTime = 0;
   double gameTime = 0;
-  var gameState = GameStates.start;
+  List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  List<int> raceCarGameLevels = [
+    raceCarGameSecondsPerLevel_1,
+    raceCarGameSecondsPerLevel_2,
+    raceCarGameSecondsPerLevel_3,
+    raceCarGameSecondsPerLevel_4,
+    raceCarGameSecondsPerLevel_5,
+    raceCarGameSecondsPerLevel_6,
+    raceCarGameSecondsPerLevel_7,
+    raceCarGameSecondsPerLevel_8,
+    raceCarGameSecondsPerLevel_9,
+    raceCarGameSecondsPerLevel_10,
+  ];
+  var gameState = GameStates.play;
   late GameBoard gameBoard;
   late StreetController streetController;
   late Timer frameTimer;
@@ -36,7 +47,7 @@ class RaceGameController extends IGame {
     int second = math.Random().nextInt(10); // Value is >= 0 and < 10.
     cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
     //TODO: DEFINE TIME TO START
-    gameState = GameStates.play;
+    gameState = GameStates.pause;
     update();
   }
 
@@ -64,19 +75,6 @@ class RaceGameController extends IGame {
 
   @override
   void updateLevel() {
-    List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    List<int> raceCarGameLevels = [
-      raceCarGameSecondsPerLevel_1,
-      raceCarGameSecondsPerLevel_2,
-      raceCarGameSecondsPerLevel_3,
-      raceCarGameSecondsPerLevel_4,
-      raceCarGameSecondsPerLevel_5,
-      raceCarGameSecondsPerLevel_6,
-      raceCarGameSecondsPerLevel_7,
-      raceCarGameSecondsPerLevel_8,
-      raceCarGameSecondsPerLevel_9,
-      raceCarGameSecondsPerLevel_10,
-    ];
     for (int i = 0; i < levels.length - 1; i++) {
       if (level == levels[i] && (gameTime / 1000).floor() == raceCarGameLevels[i]) {
         level++;

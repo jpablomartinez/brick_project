@@ -21,114 +21,56 @@ class GameLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        SizedBox(
-          height: size.height * 0.07,
-        ),
-        Row(
-          children: [
-            Container(
-              //height: size.height * 0.67,
-              height: 540,
-              width: 270,
-              //width: size.height * 0.67 / 2,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: BrickProjectColors.black,
-                  width: 4,
-                  strokeAlign: BorderSide.strokeAlignOutside,
-                ),
+    return Container(
+      color: const Color.fromARGB(255, 23, 23, 36),
+      padding: const EdgeInsets.all(6),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 60,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: BrickProjectColors.background,
+              border: Border.all(
+                color: const Color.fromARGB(255, 53, 52, 52),
+                width: 3,
+                strokeAlign: BorderSide.strokeAlignInside,
               ),
-              child: child,
             ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                height: size.height * 0.68,
-                child: Column(
+            child: Row(
+              children: [
+                Column(
                   children: [
-                    Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            '$points',
-                            style: const TextStyle(
-                              color: BrickProjectColors.black,
-                              fontFamily: 'Digital',
-                              fontSize: 40,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: const Text(
-                            'SCORE',
-                            style: TextStyle(
-                              color: BrickProjectColors.black,
-                              //fontFamily: 'Roboto',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: size.height * 0.05),
                     Container(
-                      alignment: Alignment.centerRight,
-                      child: const Text(
-                        'LIVES',
-                        style: TextStyle(
+                      //height: size.height * 0.67,
+                      height: 540,
+                      width: 270,
+                      //width: size.height * 0.67 / 2,
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(
                           color: BrickProjectColors.black,
-                          //fontFamily: 'Roboto',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          width: 4,
+                          strokeAlign: BorderSide.strokeAlignOutside,
                         ),
                       ),
+                      child: child,
                     ),
-                    const SizedBox(height: 10),
-                    lives,
-                    SizedBox(height: size.height * 0.2),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    height: size.height * 0.60,
+                    child: Column(
                       children: [
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Container(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                '$speed',
-                                style: const TextStyle(
-                                  color: BrickProjectColors.black,
-                                  fontFamily: 'Digital',
-                                  fontSize: 40,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: const Text(
-                                'SPEED',
-                                style: TextStyle(
-                                  color: BrickProjectColors.black,
-                                  //fontFamily: 'Roboto',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Container(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                '$level',
+                                '$points',
                                 style: const TextStyle(
                                   color: BrickProjectColors.black,
                                   fontFamily: 'Digital',
@@ -139,37 +81,189 @@ class GameLayout extends StatelessWidget {
                             Container(
                               alignment: Alignment.centerLeft,
                               child: const Text(
-                                'LEVEL',
+                                'SCORE',
                                 style: TextStyle(
                                   color: BrickProjectColors.black,
                                   //fontFamily: 'Roboto',
-                                  fontSize: 12,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
                           ],
                         ),
+                        SizedBox(height: size.height * 0.05),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: const Text(
+                            'LIVES',
+                            style: TextStyle(
+                              color: BrickProjectColors.black,
+                              //fontFamily: 'Roboto',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        lives,
+                        SizedBox(height: size.height * 0.2),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    '$speed',
+                                    style: const TextStyle(
+                                      color: BrickProjectColors.black,
+                                      fontFamily: 'Digital',
+                                      fontSize: 40,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: const Text(
+                                    'SPEED',
+                                    style: TextStyle(
+                                      color: BrickProjectColors.black,
+                                      //fontFamily: 'Roboto',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '$level',
+                                    style: const TextStyle(
+                                      color: BrickProjectColors.black,
+                                      fontFamily: 'Digital',
+                                      fontSize: 40,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: const Text(
+                                    'LEVEL',
+                                    style: TextStyle(
+                                      color: BrickProjectColors.black,
+                                      //fontFamily: 'Roboto',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
                       ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(bottom: 0, top: 16),
+            width: size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color.fromARGB(255, 223, 207, 87),
+                        border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
+                      ),
+                    ),
+                    const Text(
+                      'SOUND',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 226, 231, 233),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     )
                   ],
                 ),
-              ),
+                Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color.fromARGB(255, 223, 207, 87),
+                        border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
+                      ),
+                    ),
+                    const Text(
+                      'ON/OFF',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 226, 231, 233),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color.fromARGB(255, 223, 207, 87),
+                        border: Border.all(color: const Color.fromARGB(255, 118, 111, 55), width: 3, strokeAlign: BorderSide.strokeAlignOutside),
+                      ),
+                    ),
+                    const Text(
+                      'RESET',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 226, 231, 233),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        SizedBox(
-          child: Row(
-            children: [
-              //options
-              gamepad,
-            ],
           ),
-        ),
-      ],
+          Container(
+            padding: const EdgeInsets.only(
+              left: 12,
+              right: 12,
+              top: 4,
+            ),
+            child: gamepad,
+          ),
+        ],
+      ),
     );
   }
 }

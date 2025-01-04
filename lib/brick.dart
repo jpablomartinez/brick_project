@@ -17,10 +17,8 @@ class _BrickGamesState extends State<BrickGames> {
       body: Container(
         width: size.width,
         height: size.height,
-        padding: const EdgeInsets.all(12),
-        decoration: const BoxDecoration(
-          color: BrickProjectColors.background,
-        ),
+        //padding: const EdgeInsets.all(12),
+        decoration: const BoxDecoration(color: BrickProjectColors.black),
         child: RaceGameView(size: size),
       ),
     );

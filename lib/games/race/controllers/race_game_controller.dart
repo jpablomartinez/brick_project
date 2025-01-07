@@ -10,6 +10,7 @@ import 'package:brick_project/games/race/models/npc_car.dart';
 class RaceGameController extends IGame {
   int level = 1;
   int speed = 1;
+  bool accelerate = false;
   int points = 0;
   int lives = raceCarGameLives;
   double updateTime = 0;
@@ -64,6 +65,7 @@ class RaceGameController extends IGame {
     lives = raceCarGameLives;
     speed = 1;
     level = 1;
+    accelerate = false;
   }
 
   @override
@@ -90,7 +92,8 @@ class RaceGameController extends IGame {
     if (gameState == GameStates.play) {
       updateTime++;
       gameTime += (1000 / 60);
-      if (updateTime >= 8 - speed) {
+      int localSpeed = accelerate ? 8 - speed : 3;
+      if (updateTime >= localSpeed) {
         streetController.update();
         for (final car in cars) {
           if (car.ready) {
@@ -154,5 +157,9 @@ class RaceGameController extends IGame {
   @override
   void play() {
     gameState = GameStates.play;
+  }
+
+  void acceleration(bool value) {
+    accelerate = value;
   }
 }

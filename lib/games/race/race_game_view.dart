@@ -149,6 +149,8 @@ class _RaceGameState extends State<RaceGameView> {
         topButton: () {},
         rightButton: () => raceGameController.moveToRight(),
         bottomButton: () {},
+        rotateButtonDown: () => raceGameController.acceleration(true),
+        rotateButtonUp: () => raceGameController.acceleration(false),
       ),
       points: raceGameController.points,
       lives: renderLives(),

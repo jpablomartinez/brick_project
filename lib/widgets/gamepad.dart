@@ -7,6 +7,8 @@ class Gamepad extends StatelessWidget {
   final Function rightButton;
   final Function topButton;
   final Function bottomButton;
+  final Function rotateButtonDown;
+  final Function rotateButtonUp;
 
   const Gamepad({
     super.key,
@@ -14,6 +16,8 @@ class Gamepad extends StatelessWidget {
     required this.topButton,
     required this.rightButton,
     required this.bottomButton,
+    required this.rotateButtonDown,
+    required this.rotateButtonUp,
   });
 
   final double gamepadWidth = 180;
@@ -159,7 +163,8 @@ class Gamepad extends StatelessWidget {
           width: 120,
         ),
         GestureDetector(
-          onTap: () {},
+          onTapDown: (_) => rotateButtonDown(),
+          onTapUp: (_) => rotateButtonUp(),
           child: const Column(
             children: [
               GamepadButton(

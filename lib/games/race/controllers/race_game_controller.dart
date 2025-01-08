@@ -44,15 +44,11 @@ class RaceGameController extends IGame {
     gameBoard = GameBoard();
     restart();
     streetController = StreetController(gameBoard);
-    streetController.create();
-    updateView = frameUpdate;
     player = Car(true, gameBoard);
-    int first = math.Random().nextInt(10); // Value is >= 0 and < 10.
-    int second = math.Random().nextInt(10); // Value is >= 0 and < 10.
-    cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
-    //TODO: DEFINE TIME TO START
-    gameState = GameStates.pause;
+    updateView = frameUpdate;
+    putElementsInBoard();
     update();
+    gameState = GameStates.play;
   }
 
   @override
@@ -64,9 +60,9 @@ class RaceGameController extends IGame {
 
   @override
   void restart() {
-    gameState = GameStates.restart;
-    points = 0;
     lives = raceCarGameLives;
+    gameTime = 0;
+    points = 0;
     speed = 1;
     level = 1;
     accelerate = false;
@@ -118,7 +114,7 @@ class RaceGameController extends IGame {
       updateLevel();
       updatePoints();
     }
-    if (gameState == GameStates.restart) {
+    if (gameState == GameStates.restartView) {
       restartTime += (1000 * fps);
       if (restartTime > 60) {
         restartAnimation(actualRow--);
@@ -126,12 +122,7 @@ class RaceGameController extends IGame {
         if (actualRow == row * -1) {
           actualRow = row;
           restartTime = 0;
-          streetController.create();
-          player.changePosition(0, 1);
-          int first = math.Random().nextInt(10); // Value is >= 0 and < 10.
-          int second = math.Random().nextInt(10); // Value is >= 0 and < 10.
-          cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
-          //TODO: DEFINE TIME TO START
+          putElementsInBoard();
           gameState = GameStates.play;
         }
       }
@@ -207,5 +198,13 @@ class RaceGameController extends IGame {
     } else {
       cleanBoard(localRow);
     }
+  }
+
+  void putElementsInBoard() {
+    streetController.create();
+    player.changePosition(0, 1);
+    int first = math.Random().nextInt(10);
+    int second = math.Random().nextInt(10);
+    cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
   }
 }

@@ -7,7 +7,7 @@ enum GameStates {
   pause,
   gameover,
   win,
-  restart,
+  restartView,
 }
 
 const int raceCarGameLives = 4;

@@ -15,6 +15,9 @@ class RaceGameController extends IGame {
   int lives = raceCarGameLives;
   double updateTime = 0;
   double gameTime = 0;
+  double restartTime = 0;
+  bool full = true;
+  int actualRow = row;
   List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   List<int> raceCarGameLevels = [
     raceCarGameSecondsPerLevel_1,
@@ -61,6 +64,7 @@ class RaceGameController extends IGame {
 
   @override
   void restart() {
+    gameState = GameStates.restart;
     points = 0;
     lives = raceCarGameLives;
     speed = 1;
@@ -91,8 +95,8 @@ class RaceGameController extends IGame {
   void builder(Timer timer) {
     if (gameState == GameStates.play) {
       updateTime++;
-      gameTime += (1000 / 60);
-      int localSpeed = accelerate ? 8 - speed : 3;
+      gameTime += (1000 * fps);
+      int localSpeed = accelerate ? 3 : 8 - speed;
       if (updateTime >= localSpeed) {
         streetController.update();
         for (final car in cars) {
@@ -113,6 +117,24 @@ class RaceGameController extends IGame {
       checkWin();
       updateLevel();
       updatePoints();
+    }
+    if (gameState == GameStates.restart) {
+      restartTime += (1000 * fps);
+      if (restartTime > 60) {
+        restartAnimation(actualRow--);
+        restartTime = 0;
+        if (actualRow == row * -1) {
+          actualRow = row;
+          restartTime = 0;
+          streetController.create();
+          player.changePosition(0, 1);
+          int first = math.Random().nextInt(10); // Value is >= 0 and < 10.
+          int second = math.Random().nextInt(10); // Value is >= 0 and < 10.
+          cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
+          //TODO: DEFINE TIME TO START
+          gameState = GameStates.play;
+        }
+      }
     }
     updateFrame();
   }
@@ -161,5 +183,29 @@ class RaceGameController extends IGame {
 
   void acceleration(bool value) {
     accelerate = value;
+  }
+
+  void fullBoard(int localRow) {
+    for (int i = localRow - 1; i > localRow - 2; i--) {
+      for (int j = 0; j < colums; j++) {
+        gameBoard.board[i][j] = 1;
+      }
+    }
+  }
+
+  void cleanBoard(int localRow) {
+    for (int i = localRow * -1; i < (localRow * -1) + 1 && (localRow * -1) < row; i++) {
+      for (int j = 0; j < colums; j++) {
+        gameBoard.board[i][j] = 0;
+      }
+    }
+  }
+
+  void restartAnimation(int localRow) {
+    if (localRow > 0) {
+      fullBoard(localRow);
+    } else {
+      cleanBoard(localRow);
+    }
   }
 }

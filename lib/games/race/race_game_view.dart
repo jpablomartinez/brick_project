@@ -159,7 +159,7 @@ class _RaceGameState extends State<RaceGameView> {
       gamepadActions: GamepadActions(
         soundHandler: () {},
         onOffHandler: () {},
-        resetHandler: () {},
+        resetHandler: () => raceGameController.restart(),
         pauseHandler: () {
           if (raceGameController.gameState == GameStates.pause) {
             raceGameController.play();

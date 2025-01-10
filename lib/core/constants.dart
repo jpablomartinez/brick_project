@@ -1,6 +1,9 @@
 const int row = 20;
 const int colums = 10;
 
+const int left = 3;
+const int right = 6;
+
 enum GameStates {
   start,
   play,

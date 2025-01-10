@@ -44,7 +44,7 @@ class RaceGameController extends IGame {
     gameBoard = GameBoard();
     restart();
     streetController = StreetController(gameBoard);
-    player = Car(true, gameBoard);
+    player = Car(gameBoard);
     updateView = frameUpdate;
     putElementsInBoard();
     update();
@@ -104,10 +104,15 @@ class RaceGameController extends IGame {
         updateTime = 0;
         for (int i = 0; i < cars.length; i++) {
           final car = cars[i];
-          if (car.positions[3] == 12 && !cars[(i + 1) % cars.length].ready) {
+          if (car.body[3] == 12 && !cars[(i + 1) % cars.length].ready) {
             cars[(i + 1) % cars.length].start(math.Random().nextInt(10));
           }
         }
+      }
+      //gameBoard.printBoard();
+      bool res = checkCollision();
+      if (res) {
+        print('COLLISION DETECTED!!!!');
       }
       checkGameOver();
       checkWin();
@@ -128,6 +133,17 @@ class RaceGameController extends IGame {
       }
     }
     updateFrame();
+  }
+
+  bool checkCollision() {
+    for (int i = 16; i < row; i++) {
+      for (int j = 0; j < colums; j++) {
+        if (gameBoard.board[i][j] == 2) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   @override
@@ -202,9 +218,26 @@ class RaceGameController extends IGame {
 
   void putElementsInBoard() {
     streetController.create();
-    player.changePosition(0, 1);
+    player.move(left);
     int first = math.Random().nextInt(10);
     int second = math.Random().nextInt(10);
     cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
+  }
+
+  void collisionAnimation(int explosion, int rep) {
+    //from row 14 to row 18
+    //from col n to n - 2 and n + 2
+    //[1,0,0,0,0,0,0,0,0,1] -> [1,1,1,1,1,1,0,0,0,1]
+    //gameBoard.board[14][col-2] = player.firstExplosion[0][0];
+    //gameBoard.board[14][col-1] = player.firstExplosion[0][1];
+    //gameBoard.board[14][col] = player.firstExplosion[0][2];
+    //gameBoard.board[14][col+1] = player.firstExplosion[0][3];
+    //gameBoard.board[14][col+2] = player.firstExplosion[0][4];
+    int col = player.leftLane ? left : right;
+    for (int i = 14, k = 0; i < player.firstExplosion.length; i++, k++) {
+      for (int j = -2; j < 3; j++) {
+        gameBoard.board[i][col + j] = player.firstExplosion[k][j + 2];
+      }
+    }
   }
 }

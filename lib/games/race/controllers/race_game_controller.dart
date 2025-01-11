@@ -16,6 +16,9 @@ class RaceGameController extends IGame {
   double updateTime = 0;
   double gameTime = 0;
   double restartTime = 0;
+  double collisionTime = 0;
+  int collisionCycle = 1;
+  int explosionIt = 1;
   bool full = true;
   int actualRow = row;
   List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -109,11 +112,7 @@ class RaceGameController extends IGame {
           }
         }
       }
-      //gameBoard.printBoard();
-      bool res = checkCollision();
-      if (res) {
-        print('COLLISION DETECTED!!!!');
-      }
+      checkCollision();
       checkGameOver();
       checkWin();
       updateLevel();
@@ -132,18 +131,37 @@ class RaceGameController extends IGame {
         }
       }
     }
+    if (gameState == GameStates.collision) {
+      collisionTime += (1000 * fps);
+      if (collisionTime > 90) {
+        collisionAnimation(collisionCycle, 1);
+        collisionTime = 0;
+        collisionCycle++;
+        if (explosionIt == 1 && collisionCycle == 6) {
+          collisionCycle = 1;
+          explosionIt++;
+        } else if (collisionCycle == 6 && explosionIt == 2) {
+          gameState = GameStates.restartView;
+          player.leftLane = true;
+          explosionIt = 1;
+          collisionCycle = 1;
+        }
+        //restart();
+        //gameState = GameStates.restartView;
+      }
+    }
     updateFrame();
   }
 
-  bool checkCollision() {
+  void checkCollision() {
     for (int i = 16; i < row; i++) {
       for (int j = 0; j < colums; j++) {
         if (gameBoard.board[i][j] == 2) {
-          return true;
+          //lives--;
+          gameState = GameStates.collision;
         }
       }
     }
-    return false;
   }
 
   @override
@@ -225,18 +243,23 @@ class RaceGameController extends IGame {
   }
 
   void collisionAnimation(int explosion, int rep) {
-    //from row 14 to row 18
-    //from col n to n - 2 and n + 2
-    //[1,0,0,0,0,0,0,0,0,1] -> [1,1,1,1,1,1,0,0,0,1]
-    //gameBoard.board[14][col-2] = player.firstExplosion[0][0];
-    //gameBoard.board[14][col-1] = player.firstExplosion[0][1];
-    //gameBoard.board[14][col] = player.firstExplosion[0][2];
-    //gameBoard.board[14][col+1] = player.firstExplosion[0][3];
-    //gameBoard.board[14][col+2] = player.firstExplosion[0][4];
+    List<List<int>> tmp = [];
+    if (collisionCycle == 1) {
+      tmp = player.firstExplosion;
+    } else if (collisionCycle == 2) {
+      tmp = player.secondExplosion;
+    } else if (collisionCycle == 3) {
+      tmp = player.thirdExplosion;
+    } else if (collisionCycle == 4) {
+      tmp = player.fourthExplosion;
+    } else if (collisionCycle == 5) {
+      tmp = player.fifthExplosion;
+    }
+
     int col = player.leftLane ? left : right;
-    for (int i = 14, k = 0; i < player.firstExplosion.length; i++, k++) {
+    for (int i = 14, k = 0; k < player.firstExplosion.length; i++, k++) {
       for (int j = -2; j < 3; j++) {
-        gameBoard.board[i][col + j] = player.firstExplosion[k][j + 2];
+        gameBoard.board[i][col + j] = tmp[k][j + 2];
       }
     }
   }

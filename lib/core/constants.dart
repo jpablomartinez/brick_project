@@ -11,6 +11,7 @@ enum GameStates {
   gameover,
   win,
   restartView,
+  collision,
 }
 
 const int raceCarGameLives = 4;

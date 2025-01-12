@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:brick_project/core/constants.dart';
 import 'package:brick_project/core/game_board.dart';
 import 'package:brick_project/core/i_game.dart';
+import 'package:brick_project/games/race/controllers/collision_controller.dart';
 import 'package:brick_project/games/race/controllers/street_controller.dart';
 import 'package:brick_project/games/race/models/car.dart';
 import 'package:brick_project/games/race/models/npc_car.dart';
@@ -16,9 +17,6 @@ class RaceGameController extends IGame {
   double updateTime = 0;
   double gameTime = 0;
   double restartTime = 0;
-  double collisionTime = 0;
-  int collisionCycle = 1;
-  int explosionIt = 1;
   bool full = true;
   int actualRow = row;
   List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -37,6 +35,7 @@ class RaceGameController extends IGame {
   var gameState = GameStates.play;
   late GameBoard gameBoard;
   late StreetController streetController;
+  late CollisionController collisionController;
   late Timer frameTimer;
   late Function updateView;
   late Car player;
@@ -47,6 +46,7 @@ class RaceGameController extends IGame {
     gameBoard = GameBoard();
     restart();
     streetController = StreetController(gameBoard);
+    collisionController = CollisionController();
     player = Car(gameBoard);
     updateView = frameUpdate;
     putElementsInBoard();
@@ -132,22 +132,17 @@ class RaceGameController extends IGame {
       }
     }
     if (gameState == GameStates.collision) {
-      collisionTime += (1000 * fps);
-      if (collisionTime > 90) {
-        collisionAnimation(collisionCycle, 1);
-        collisionTime = 0;
-        collisionCycle++;
-        if (explosionIt == 1 && collisionCycle == 6) {
-          collisionCycle = 1;
-          explosionIt++;
-        } else if (collisionCycle == 6 && explosionIt == 2) {
+      collisionController.collisionTime += (1000 * fps);
+      if (collisionController.collisionTime > 80) {
+        collisionController.collisionAnimation(gameBoard.board, player);
+        collisionController.restartCollisionTime();
+        if (collisionController.isCollisionAnimatioFrameEnd()) {
+          collisionController.restartCollisionAnimationFrame();
+        } else if (collisionController.isCollisionAnimationComplete()) {
           gameState = GameStates.restartView;
           player.leftLane = true;
-          explosionIt = 1;
-          collisionCycle = 1;
+          collisionController.restartCollisionAnimation();
         }
-        //restart();
-        //gameState = GameStates.restartView;
       }
     }
     updateFrame();
@@ -240,27 +235,5 @@ class RaceGameController extends IGame {
     int first = math.Random().nextInt(10);
     int second = math.Random().nextInt(10);
     cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
-  }
-
-  void collisionAnimation(int explosion, int rep) {
-    List<List<int>> tmp = [];
-    if (collisionCycle == 1) {
-      tmp = player.firstExplosion;
-    } else if (collisionCycle == 2) {
-      tmp = player.secondExplosion;
-    } else if (collisionCycle == 3) {
-      tmp = player.thirdExplosion;
-    } else if (collisionCycle == 4) {
-      tmp = player.fourthExplosion;
-    } else if (collisionCycle == 5) {
-      tmp = player.fifthExplosion;
-    }
-
-    int col = player.leftLane ? left : right;
-    for (int i = 14, k = 0; k < player.firstExplosion.length; i++, k++) {
-      for (int j = -2; j < 3; j++) {
-        gameBoard.board[i][col + j] = tmp[k][j + 2];
-      }
-    }
   }
 }

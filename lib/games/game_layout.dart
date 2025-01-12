@@ -109,7 +109,7 @@ class GameLayout extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         lives,
-                        SizedBox(height: size.height * 0.2),
+                        SizedBox(height: size.height * 0.05),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -170,7 +170,7 @@ class GameLayout extends StatelessWidget {
                               ],
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),

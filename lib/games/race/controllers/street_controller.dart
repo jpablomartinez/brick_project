@@ -1,13 +1,5 @@
-import 'package:brick_project/core/game_board.dart';
-
 class StreetController {
-  late GameBoard gameBoard;
-
-  StreetController(GameBoard gb) {
-    gameBoard = gb;
-  }
-
-  void create() {
+  void create(List<List<int>> board) {
     int fillValue = 0;
     int current = 0;
     for (int i = 0; i < 20; i++) {
@@ -15,22 +7,22 @@ class StreetController {
         fillValue = 1 - fillValue;
         current = 0;
       }
-      gameBoard.board[i][0] = fillValue;
-      gameBoard.board[i][9] = fillValue;
+      board[i][0] = fillValue;
+      board[i][9] = fillValue;
       current++;
     }
   }
 
-  void update() {
-    int firstColumnLastElement = gameBoard.board[19][0];
-    int lastColumnLastElement = gameBoard.board[19][9];
+  void update(List<List<int>> board) {
+    int firstColumnLastElement = board[19][0];
+    int lastColumnLastElement = board[19][9];
 
     for (int row = 19; row > 0; row--) {
-      gameBoard.board[row][0] = gameBoard.board[row - 1][0];
-      gameBoard.board[row][9] = gameBoard.board[row - 1][9];
+      board[row][0] = board[row - 1][0];
+      board[row][9] = board[row - 1][9];
     }
 
-    gameBoard.board[0][0] = firstColumnLastElement;
-    gameBoard.board[0][9] = lastColumnLastElement;
+    board[0][0] = firstColumnLastElement;
+    board[0][9] = lastColumnLastElement;
   }
 }

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:brick_project/core/constants.dart';
 import 'package:brick_project/core/game_board.dart';
 import 'package:brick_project/core/i_game.dart';
+import 'package:brick_project/core/restart_controller.dart';
 import 'package:brick_project/games/race/controllers/collision_controller.dart';
 import 'package:brick_project/games/race/controllers/street_controller.dart';
 import 'package:brick_project/games/race/models/car.dart';
@@ -16,7 +17,6 @@ class RaceGameController extends IGame {
   int lives = raceCarGameLives;
   double updateTime = 0;
   double gameTime = 0;
-  double restartTime = 0;
   bool full = true;
   int actualRow = row;
   List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -36,6 +36,7 @@ class RaceGameController extends IGame {
   late GameBoard gameBoard;
   late StreetController streetController;
   late CollisionController collisionController;
+  late RestartController restartController;
   late Timer frameTimer;
   late Function updateView;
   late Car player;
@@ -45,8 +46,9 @@ class RaceGameController extends IGame {
   void startGame(Function frameUpdate) {
     gameBoard = GameBoard();
     restart();
-    streetController = StreetController(gameBoard);
+    streetController = StreetController();
     collisionController = CollisionController();
+    restartController = RestartController();
     player = Car(gameBoard);
     updateView = frameUpdate;
     putElementsInBoard();
@@ -97,7 +99,7 @@ class RaceGameController extends IGame {
       gameTime += (1000 * fps);
       int localSpeed = accelerate ? 3 : 8 - speed;
       if (updateTime >= localSpeed) {
-        streetController.update();
+        streetController.update(gameBoard.board);
         for (final car in cars) {
           if (car.ready) {
             car.clear();
@@ -119,13 +121,13 @@ class RaceGameController extends IGame {
       updatePoints();
     }
     if (gameState == GameStates.restartView) {
-      restartTime += (1000 * fps);
-      if (restartTime > 60) {
-        restartAnimation(actualRow--);
-        restartTime = 0;
+      restartController.restartTime += (1000 * fps);
+      if (restartController.isDurationComplete()) {
+        restartController.restartAnimation(gameBoard.board, actualRow--);
+        restartController.resetRestartTime();
         if (actualRow == row * -1) {
           actualRow = row;
-          restartTime = 0;
+          restartController.resetRestartTime();
           putElementsInBoard();
           gameState = GameStates.play;
         }
@@ -133,7 +135,7 @@ class RaceGameController extends IGame {
     }
     if (gameState == GameStates.collision) {
       collisionController.collisionTime += (1000 * fps);
-      if (collisionController.collisionTime > 80) {
+      if (collisionController.isCollisionTimeComplete()) {
         collisionController.collisionAnimation(gameBoard.board, player);
         collisionController.restartCollisionTime();
         if (collisionController.isCollisionAnimatioFrameEnd()) {
@@ -152,8 +154,9 @@ class RaceGameController extends IGame {
     for (int i = 16; i < row; i++) {
       for (int j = 0; j < colums; j++) {
         if (gameBoard.board[i][j] == 2) {
-          //lives--;
+          lives--;
           gameState = GameStates.collision;
+          break;
         }
       }
     }
@@ -205,32 +208,8 @@ class RaceGameController extends IGame {
     accelerate = value;
   }
 
-  void fullBoard(int localRow) {
-    for (int i = localRow - 1; i > localRow - 2; i--) {
-      for (int j = 0; j < colums; j++) {
-        gameBoard.board[i][j] = 1;
-      }
-    }
-  }
-
-  void cleanBoard(int localRow) {
-    for (int i = localRow * -1; i < (localRow * -1) + 1 && (localRow * -1) < row; i++) {
-      for (int j = 0; j < colums; j++) {
-        gameBoard.board[i][j] = 0;
-      }
-    }
-  }
-
-  void restartAnimation(int localRow) {
-    if (localRow > 0) {
-      fullBoard(localRow);
-    } else {
-      cleanBoard(localRow);
-    }
-  }
-
   void putElementsInBoard() {
-    streetController.create();
+    streetController.create(gameBoard.board);
     player.move(left);
     int first = math.Random().nextInt(10);
     int second = math.Random().nextInt(10);

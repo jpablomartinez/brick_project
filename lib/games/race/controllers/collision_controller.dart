@@ -69,6 +69,10 @@ class CollisionController {
     explosionIt = 2;
   }
 
+  bool isCollisionTimeComplete() {
+    return collisionTime > 80;
+  }
+
   bool isCollisionAnimatioFrameEnd() {
     return (explosionIt == 1 && collisionIt == 6);
   }

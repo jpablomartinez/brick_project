@@ -53,6 +53,19 @@ class CollisionController {
     explosionIt = 1;
   }
 
+  /// Updates the game board to display the current frame of the collision animation.
+  ///
+  /// This method modifies the `board` to reflect the current state of the collision
+  /// animation for the player's car. It uses the `collisions` list to determine
+  /// the animation frame to display, based on the `collisionIt` index. The position
+  /// on the board is determined by whether the player's car is in the left or right lane.
+  ///
+  /// The `collisionIt` index is incremented after updating the board to progress
+  /// to the next frame in subsequent calls.
+  ///
+  /// - Parameters:
+  ///   - board: A 2D list representing the game board where the animation is displayed.
+  ///   - player: The player's car object, used to determine the lane position.
   void collisionAnimation(List<List<int>> board, Car player) {
     List<List<int>> tmp = collisions[collisionIt - 1];
     int col = player.leftLane ? left : right;

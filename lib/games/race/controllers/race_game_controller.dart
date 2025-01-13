@@ -42,6 +42,13 @@ class RaceGameController extends IGame {
   late Car player;
   late List<NpcCar> cars;
 
+  /// Initializes and starts the race game.
+  ///
+  /// This method sets up the game board, initializes controllers, and places
+  /// game elements on the board. It also sets the game state to play and
+  /// begins the game update loop.
+  ///
+  /// [frameUpdate] is a callback function that updates the game view.
   @override
   void startGame(Function frameUpdate) {
     gameBoard = GameBoard();
@@ -56,6 +63,12 @@ class RaceGameController extends IGame {
     gameState = GameStates.play;
   }
 
+  /// Starts a periodic timer to update the game state.
+  ///
+  /// This method initializes a `Timer` that triggers the `builder` method
+  /// at intervals determined by the frames per second (fps) setting. The
+  /// `builder` method is responsible for handling the current game state
+  /// and updating the game frame accordingly.
   @override
   void update() {
     frameTimer = Timer.periodic(Duration(milliseconds: (1000 * fps).floor()), (timer) {
@@ -63,6 +76,10 @@ class RaceGameController extends IGame {
     });
   }
 
+  /// Resets the game state to its initial values.
+  ///
+  /// This method reinitializes the game variables such as lives, game time,
+  /// points, speed, level, and acceleration status to their starting values.
   @override
   void restart() {
     lives = raceCarGameLives;
@@ -73,6 +90,10 @@ class RaceGameController extends IGame {
     accelerate = false;
   }
 
+  /// Updates the player's points based on the elapsed game time.
+  ///
+  /// Increments the points by 1 if the integer value of the game time
+  /// in seconds exceeds the current points.
   @override
   void updatePoints() {
     if ((gameTime / 1000).floor() > points) {
@@ -80,6 +101,13 @@ class RaceGameController extends IGame {
     }
   }
 
+  /// Updates the game level based on elapsed game time.
+  ///
+  /// This method iterates through the levels and checks if the current
+  /// level matches a predefined level and if the elapsed game time in
+  /// seconds matches the corresponding time for that level. If both
+  /// conditions are met, the level is incremented. Additionally, if the
+  /// new level is even, the speed is increased.
   @override
   void updateLevel() {
     for (int i = 0; i < levels.length - 1; i++) {
@@ -92,64 +120,117 @@ class RaceGameController extends IGame {
     }
   }
 
+  /// Handles the game state updates based on the current game state.
+  ///
+  /// This method is called periodically by a timer to update the game state.
+  /// It checks the current `gameState` and calls the appropriate handler
+  /// method (`handlePlayState`, `handleRestartViewState`, or `handleCollisionState`)
+  /// to manage the game logic for that state. After handling the state, it
+  /// updates the game frame.
+  ///
+  /// [timer] is the periodic timer triggering this method.
   @override
   void builder(Timer timer) {
-    if (gameState == GameStates.play) {
-      updateTime++;
-      gameTime += (1000 * fps);
-      int localSpeed = accelerate ? 3 : 8 - speed;
-      if (updateTime >= localSpeed) {
-        streetController.update(gameBoard.board);
-        for (final car in cars) {
-          if (car.ready) {
-            car.clear();
-            car.move();
-          }
-        }
-        updateTime = 0;
-        for (int i = 0; i < cars.length; i++) {
-          final car = cars[i];
-          if (car.body[3] == 12 && !cars[(i + 1) % cars.length].ready) {
-            cars[(i + 1) % cars.length].start(math.Random().nextInt(10));
-          }
-        }
-      }
-      checkCollision();
-      checkGameOver();
-      checkWin();
-      updateLevel();
-      updatePoints();
-    }
-    if (gameState == GameStates.restartView) {
-      restartController.restartTime += (1000 * fps);
-      if (restartController.isDurationComplete()) {
-        restartController.restartAnimation(gameBoard.board, actualRow--);
-        restartController.resetRestartTime();
-        if (actualRow == row * -1) {
-          actualRow = row;
-          restartController.resetRestartTime();
-          putElementsInBoard();
-          gameState = GameStates.play;
-        }
-      }
-    }
-    if (gameState == GameStates.collision) {
-      collisionController.collisionTime += (1000 * fps);
-      if (collisionController.isCollisionTimeComplete()) {
-        collisionController.collisionAnimation(gameBoard.board, player);
-        collisionController.restartCollisionTime();
-        if (collisionController.isCollisionAnimatioFrameEnd()) {
-          collisionController.restartCollisionAnimationFrame();
-        } else if (collisionController.isCollisionAnimationComplete()) {
-          gameState = GameStates.restartView;
-          player.leftLane = true;
-          collisionController.restartCollisionAnimation();
-        }
-      }
+    switch (gameState) {
+      case GameStates.play:
+        handlePlayState();
+        break;
+      case GameStates.restartView:
+        handleRestartViewState();
+        break;
+      case GameStates.collision:
+        handleCollisionState();
+        break;
+      default:
+        break;
     }
     updateFrame();
   }
 
+  /// Handles the play state of the race game.
+  ///
+  /// This method updates the game time and manages the movement of NPC cars
+  /// based on the current speed and acceleration status. It checks for collisions,
+  /// game over conditions, and winning conditions, and updates the game level
+  /// and player points accordingly. The street and car positions are updated
+  /// periodically based on the local speed.
+  void handlePlayState() {
+    updateTime++;
+    gameTime += (1000 * fps);
+    int localSpeed = accelerate ? 3 : 8 - speed;
+    if (updateTime >= localSpeed) {
+      streetController.update(gameBoard.board);
+      for (final car in cars) {
+        if (car.ready) {
+          car.clear();
+          car.move();
+        }
+      }
+      updateTime = 0;
+      for (int i = 0; i < cars.length; i++) {
+        final car = cars[i];
+        if (car.body[3] == 12 && !cars[(i + 1) % cars.length].ready) {
+          cars[(i + 1) % cars.length].start(math.Random().nextInt(10));
+        }
+      }
+    }
+    checkCollision();
+    checkGameOver();
+    checkWin();
+    updateLevel();
+    updatePoints();
+  }
+
+  /// Handles the restart view state of the race game.
+  ///
+  /// This method increments the restart time and checks if the duration
+  /// is complete. If complete, it triggers the restart animation and
+  /// resets the restart time. Once the animation reaches the initial row,
+  /// it resets the row, places elements back on the board, and changes
+  /// the game state to play.
+  void handleRestartViewState() {
+    restartController.restartTime += (1000 * fps);
+    if (restartController.isDurationComplete()) {
+      restartController.restartAnimation(gameBoard.board, actualRow--);
+      restartController.resetRestartTime();
+      if (actualRow == row * -1) {
+        actualRow = row;
+        restartController.resetRestartTime();
+        putElementsInBoard();
+        gameState = GameStates.play;
+      }
+    }
+  }
+
+  /// Handles the collision state of the race game.
+  ///
+  /// This method updates the collision time and checks if the collision
+  /// time is complete. If complete, it triggers the collision animation
+  /// and resets the collision time. It also checks if the collision
+  /// animation frame or the entire animation is complete, and updates
+  /// the game state to restart view if necessary. Additionally, it
+  /// resets the player's position and collision animation state.
+  void handleCollisionState() {
+    collisionController.collisionTime += (1000 * fps);
+    if (collisionController.isCollisionTimeComplete()) {
+      collisionController.collisionAnimation(gameBoard.board, player);
+      collisionController.restartCollisionTime();
+      if (collisionController.isCollisionAnimatioFrameEnd()) {
+        collisionController.restartCollisionAnimationFrame();
+      } else if (collisionController.isCollisionAnimationComplete()) {
+        gameState = GameStates.restartView;
+        player.leftLane = true;
+        collisionController.restartCollisionAnimation();
+      }
+    }
+  }
+
+  /// Checks for collisions on the game board.
+  ///
+  /// This method iterates over a specific section of the game board to
+  /// detect collisions. If a collision is detected (indicated by a value
+  /// of 2 on the board), it decrements the player's lives and changes
+  /// the game state to `collision`.
   void checkCollision() {
     for (int i = 16; i < row; i++) {
       for (int j = 0; j < colums; j++) {
@@ -162,15 +243,24 @@ class RaceGameController extends IGame {
     }
   }
 
+  /// Checks if the game is over by evaluating the player's lives.
+  ///
+  /// If the player's lives are reduced to zero, the game state is set
+  /// to `gameover`, indicating the end of the game.
   @override
   void checkGameOver() {
-    //CHECK COLLISIONS AND LIVES
     if (lives == 0) {
       //TRIGGER GAME OVER
       gameState = GameStates.gameover;
     }
   }
 
+  /// Checks if the player has won the game.
+  ///
+  /// This method evaluates the current level and game time to determine
+  /// if the win condition is met. If the player reaches level 10 and the
+  /// elapsed game time matches the predefined time for level 10, the game
+  /// state is set to `win`.
   @override
   void checkWin() {
     if (level == 10 && (gameTime / 1000).floor() == raceCarGameSecondsPerLevel_10) {
@@ -178,36 +268,68 @@ class RaceGameController extends IGame {
     }
   }
 
+  /// Moves the player's car to the left.
+  ///
+  /// This method checks if the game is currently in the play state
+  /// and, if so, instructs the player's car to move left.
   void moveToLeft() {
     if (gameState == GameStates.play) {
       player.moveToLeft();
     }
   }
 
+  /// Moves the player's car to the right.
+  ///
+  /// This method checks if the game is currently in the play state
+  /// and, if so, instructs the player's car to move right.
   void moveToRight() {
     if (gameState == GameStates.play) {
       player.moveToRight();
     }
   }
 
+  /// Updates the game frame by invoking the view update callback.
+  ///
+  /// This method is responsible for refreshing the game view by calling
+  /// the `updateView` function, which is expected to update the visual
+  /// representation of the game state.
   void updateFrame() {
     updateView();
   }
 
+  /// Pauses the race game.
+  ///
+  /// This method sets the game state to `pause`, halting all game
+  /// activities until the game is resumed.
   @override
   void pause() {
     gameState = GameStates.pause;
   }
 
+  /// Sets the game state to 'play'.
+  ///
+  /// This method changes the current game state to 'play', allowing
+  /// the game to resume or continue its active state.
   @override
   void play() {
     gameState = GameStates.play;
   }
 
+  /// Sets the acceleration state of the player's car.
+  ///
+  /// This method updates the `accelerate` flag, which determines
+  /// whether the player's car is in an accelerated state.
+  ///
+  /// [value] A boolean indicating the desired acceleration state.
   void acceleration(bool value) {
     accelerate = value;
   }
 
+  /// Places game elements on the game board.
+  ///
+  /// This method initializes the street and moves the player's car to the left.
+  /// It also randomly generates positions for two NPC cars and places them on
+  /// the game board.
   void putElementsInBoard() {
     streetController.create(gameBoard.board);
     player.move(left);

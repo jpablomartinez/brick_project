@@ -1,4 +1,5 @@
 import 'package:brick_project/colors.dart';
+import 'package:brick_project/widgets/game_over.dart';
 import 'package:flutter/material.dart';
 
 class GameLayout extends StatelessWidget {
@@ -9,6 +10,7 @@ class GameLayout extends StatelessWidget {
   final int points;
   final int speed;
   final int level;
+  final bool gameOver;
   const GameLayout({
     super.key,
     required this.child,
@@ -18,6 +20,7 @@ class GameLayout extends StatelessWidget {
     required this.points,
     required this.speed,
     required this.level,
+    required this.gameOver,
   });
 
   @override
@@ -171,6 +174,8 @@ class GameLayout extends StatelessWidget {
                             ),
                           ],
                         ),
+                        SizedBox(height: size.height * 0.05),
+                        gameOver ? const GameOverWidget() : const SizedBox(),
                       ],
                     ),
                   ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:brick_project/core/constants.dart';
+import 'package:brick_project/core/fps_controller.dart';
 import 'package:brick_project/core/game_board.dart';
 import 'package:brick_project/core/i_game.dart';
 import 'package:brick_project/core/restart_controller.dart';
@@ -37,6 +38,7 @@ class RaceGameController extends IGame {
   late StreetController streetController;
   late CollisionController collisionController;
   late RestartController restartController;
+  late FpsController fpsController;
   late Timer frameTimer;
   late Function updateView;
   late Car player;
@@ -56,6 +58,7 @@ class RaceGameController extends IGame {
     streetController = StreetController();
     collisionController = CollisionController();
     restartController = RestartController();
+    fpsController = FpsController();
     player = Car(gameBoard);
     updateView = frameUpdate;
     putElementsInBoard();
@@ -131,6 +134,8 @@ class RaceGameController extends IGame {
   /// [timer] is the periodic timer triggering this method.
   @override
   void builder(Timer timer) {
+    //fpsController.calculateFPS();
+    //print(fpsController.fps);
     switch (gameState) {
       case GameStates.play:
         handlePlayState();
@@ -140,6 +145,9 @@ class RaceGameController extends IGame {
         break;
       case GameStates.collision:
         handleCollisionState();
+        break;
+      case GameStates.gameover:
+        handleGameOver();
         break;
       default:
         break;
@@ -175,7 +183,6 @@ class RaceGameController extends IGame {
       }
     }
     checkCollision();
-    checkGameOver();
     checkWin();
     updateLevel();
     updatePoints();
@@ -196,8 +203,16 @@ class RaceGameController extends IGame {
       if (actualRow == row * -1) {
         actualRow = row;
         restartController.resetRestartTime();
-        putElementsInBoard();
-        gameState = GameStates.play;
+        if (checkGameOver()) {
+          gameState = GameStates.gameover;
+          streetController.create(gameBoard.board);
+          int first = math.Random().nextInt(10);
+          int second = math.Random().nextInt(10);
+          cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
+        } else {
+          putElementsInBoard();
+          gameState = GameStates.play;
+        }
       }
     }
   }
@@ -225,6 +240,27 @@ class RaceGameController extends IGame {
     }
   }
 
+  void handleGameOver() {
+    updateTime++;
+    int localSpeed = 8;
+    if (updateTime >= localSpeed) {
+      streetController.update(gameBoard.board);
+      for (final car in cars) {
+        if (car.ready) {
+          car.clear();
+          car.move();
+        }
+      }
+      updateTime = 0;
+      for (int i = 0; i < cars.length; i++) {
+        final car = cars[i];
+        if (car.body[3] == 12 && !cars[(i + 1) % cars.length].ready) {
+          cars[(i + 1) % cars.length].start(math.Random().nextInt(10));
+        }
+      }
+    }
+  }
+
   /// Checks for collisions on the game board.
   ///
   /// This method iterates over a specific section of the game board to
@@ -248,11 +284,8 @@ class RaceGameController extends IGame {
   /// If the player's lives are reduced to zero, the game state is set
   /// to `gameover`, indicating the end of the game.
   @override
-  void checkGameOver() {
-    if (lives == 0) {
-      //TRIGGER GAME OVER
-      gameState = GameStates.gameover;
-    }
+  bool checkGameOver() {
+    return lives == 0;
   }
 
   /// Checks if the player has won the game.

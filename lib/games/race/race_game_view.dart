@@ -171,6 +171,7 @@ class _RaceGameState extends State<RaceGameView> {
           }
         },
       ),
+      gameOver: raceGameController.gameState == GameStates.gameover,
       child: Container(
         color: BrickProjectColors.background,
         child: board,

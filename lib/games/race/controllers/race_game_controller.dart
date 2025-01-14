@@ -240,6 +240,12 @@ class RaceGameController extends IGame {
     }
   }
 
+  /// Handles the game over state by updating the street and NPC cars.
+  ///
+  /// This method increments the update time and checks if it meets or exceeds
+  /// the local speed threshold. If so, it updates the street and moves NPC cars
+  /// that are ready. It also resets the update time and starts the next car
+  /// in sequence if conditions are met.
   void handleGameOver() {
     updateTime++;
     int localSpeed = 8;

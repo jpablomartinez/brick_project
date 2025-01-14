@@ -1,8 +1,8 @@
-# BRICK PROJECT
+# BRICK PROJECT 💻 🕹
 
 Brick Project is a mobile app designed to bring back the nostalgia of classic "brick game" devices, like the iconic 9999-in-1 games. The app will feature at least three popular games: **Brick Race**, **Snake**, and **Tetris**. Additionally, the project includes a custom engine that allows the creation and integration of new brick-style games, offering endless possibilities for expansion.
 
-## Project Features
+## Project Features 🎯
 
 -   **Included Games**:
     -   _Brick Race_: Dodge obstacles and collect points in a fast-paced, classic racing game.
@@ -11,7 +11,7 @@ Brick Project is a mobile app designed to bring back the nostalgia of classic "b
 -   **Customizable Engine**: Add and customize new brick-style games with ease, making this project perfect for developers and enthusiasts.
 -   **Cross-Platform Compatibility**: Designed to run on any mobile device that supports Flutter.
 
-## Getting Started
+## Getting Started 🧭
 
 This project is built with **Flutter**, ensuring versatility and compatibility with multiple operating systems. Follow the steps below to run the app:
 
@@ -29,6 +29,6 @@ This project is built with **Flutter**, ensuring versatility and compatibility w
     flutter run
     ```
 
-## Release
+## Release ⏳
 
 **Brick Project** will soon be available on the **Google Play Store** for Android devices. We are also working to release it on the **App Store** for iOS devices in the near future (only license is missing). Get ready to enjoy hours of classic gaming fun right at your fingertips!

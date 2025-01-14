@@ -24,7 +24,7 @@ This project is built with **Flutter**, ensuring versatility and compatibility w
     flutter pub get
     ```
     This will install all necessary dependencies for the project.
-4. Run the app with (dont forget use a emulator or physical device):
+4. Run the app with (dont forget use an emulator or physical device):
     ```bash
     flutter run
     ```

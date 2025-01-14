@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:brick_project/core/constants.dart';
+import 'package:brick_project/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class GameBoard {

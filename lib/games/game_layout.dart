@@ -1,4 +1,4 @@
-import 'package:brick_project/colors.dart';
+import 'package:brick_project/utils/colors.dart';
 import 'package:brick_project/widgets/game_over.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
-import 'package:brick_project/colors.dart';
-import 'package:brick_project/core/constants.dart';
+import 'package:brick_project/utils/colors.dart';
+import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
 import 'package:brick_project/games/race/controllers/race_game_controller.dart';
 import 'package:brick_project/widgets/gamepad.dart';

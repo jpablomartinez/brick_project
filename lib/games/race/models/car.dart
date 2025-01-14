@@ -1,4 +1,4 @@
-import 'package:brick_project/core/constants.dart';
+import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/core/game_board.dart';
 
 class Car {

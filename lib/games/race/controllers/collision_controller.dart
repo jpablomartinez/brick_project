@@ -1,6 +1,6 @@
 import 'package:brick_project/games/race/models/car.dart';
 
-import '../../../core/constants.dart';
+import '../../../utils/constants.dart';
 
 List<List<int>> firstExplosion = <List<int>>[
   <int>[1, 1, 1, 1, 1],

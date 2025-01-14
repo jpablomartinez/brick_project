@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'package:brick_project/core/constants.dart';
+import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/core/fps_controller.dart';
 import 'package:brick_project/core/game_board.dart';
-import 'package:brick_project/core/i_game.dart';
+import 'package:brick_project/core/interfaces/i_game.dart';
 import 'package:brick_project/core/restart_controller.dart';
 import 'package:brick_project/games/race/controllers/collision_controller.dart';
 import 'package:brick_project/games/race/controllers/street_controller.dart';

@@ -160,6 +160,7 @@ class _RaceGameState extends State<RaceGameView> {
         soundHandler: () {},
         onOffHandler: () {},
         resetHandler: () {
+          raceGameController.forceReset = true;
           raceGameController.gameState = GameStates.restartView;
           raceGameController.restart();
         },

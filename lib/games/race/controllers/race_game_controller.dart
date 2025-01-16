@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:brick_project/core/audio_manager.dart';
 import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/core/fps_controller.dart';
 import 'package:brick_project/core/game_board.dart';
@@ -18,7 +19,9 @@ class RaceGameController extends IGame {
   int lives = raceCarGameLives;
   double updateTime = 0;
   double gameTime = 0;
+  double startTime = 0;
   bool full = true;
+  bool forceReset = false;
   int actualRow = row;
   List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   List<int> raceCarGameLevels = [
@@ -43,6 +46,7 @@ class RaceGameController extends IGame {
   late Function updateView;
   late Car player;
   late List<NpcCar> cars;
+  late AudioSettings audioSettings;
 
   /// Initializes and starts the race game.
   ///
@@ -54,16 +58,18 @@ class RaceGameController extends IGame {
   @override
   void startGame(Function frameUpdate) {
     gameBoard = GameBoard();
-    restart();
     streetController = StreetController();
     collisionController = CollisionController();
     restartController = RestartController();
     fpsController = FpsController();
+    audioSettings = AudioSettings();
     player = Car(gameBoard);
     updateView = frameUpdate;
+    restart();
     putElementsInBoard();
     update();
-    gameState = GameStates.play;
+    audioSettings.playSfx('audios/start.wav');
+    gameState = GameStates.start;
   }
 
   /// Starts a periodic timer to update the game state.
@@ -137,6 +143,9 @@ class RaceGameController extends IGame {
     //fpsController.calculateFPS();
     //print(fpsController.fps);
     switch (gameState) {
+      case GameStates.start:
+        handleStartAnimation();
+        break;
       case GameStates.play:
         handlePlayState();
         break;
@@ -188,6 +197,15 @@ class RaceGameController extends IGame {
     updatePoints();
   }
 
+  void handleStartAnimation() {
+    startTime += (1000 * fps);
+    if (startTime > 3000) {
+      startTime = 0;
+      gameState = GameStates.play;
+      forceReset = false;
+    }
+  }
+
   /// Handles the restart view state of the race game.
   ///
   /// This method increments the restart time and checks if the duration
@@ -204,14 +222,20 @@ class RaceGameController extends IGame {
         actualRow = row;
         restartController.resetRestartTime();
         if (checkGameOver()) {
+          audioSettings.playSfx('audios/game_over.wav');
           gameState = GameStates.gameover;
           streetController.create(gameBoard.board);
           int first = math.Random().nextInt(10);
           int second = math.Random().nextInt(10);
           cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
         } else {
+          if (forceReset) {
+            audioSettings.playSfx('audios/start.wav');
+            gameState = GameStates.start;
+          } else {
+            gameState = GameStates.play;
+          }
           putElementsInBoard();
-          gameState = GameStates.play;
         }
       }
     }
@@ -279,6 +303,7 @@ class RaceGameController extends IGame {
         if (gameBoard.board[i][j] == 2) {
           lives--;
           gameState = GameStates.collision;
+          audioSettings.playSfx('audios/collision.wav');
           break;
         }
       }
@@ -313,6 +338,7 @@ class RaceGameController extends IGame {
   /// and, if so, instructs the player's car to move left.
   void moveToLeft() {
     if (gameState == GameStates.play) {
+      audioSettings.playSfx('audios/arrow_button.wav');
       player.moveToLeft();
     }
   }
@@ -323,6 +349,7 @@ class RaceGameController extends IGame {
   /// and, if so, instructs the player's car to move right.
   void moveToRight() {
     if (gameState == GameStates.play) {
+      audioSettings.playSfx('audios/arrow_button.wav');
       player.moveToRight();
     }
   }

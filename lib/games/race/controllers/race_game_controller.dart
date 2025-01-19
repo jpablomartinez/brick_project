@@ -14,6 +14,8 @@ import 'package:brick_project/games/race/models/npc_car.dart';
 class RaceGameController extends IGame {
   int level = 1;
   int speed = 1;
+  int leftSpawn = 0;
+  int rightSpawn = 0;
   bool accelerate = false;
   int points = 0;
   int lives = raceCarGameLives;
@@ -187,7 +189,23 @@ class RaceGameController extends IGame {
       for (int i = 0; i < cars.length; i++) {
         final car = cars[i];
         if (car.body[3] == 12 && !cars[(i + 1) % cars.length].ready) {
-          cars[(i + 1) % cars.length].start(math.Random().nextInt(10));
+          int pos = math.Random().nextInt(10);
+          if (pos < 5) {
+            if (leftSpawn == 1) {
+              leftSpawn = 0;
+              pos = 5;
+            } else {
+              leftSpawn++;
+            }
+          } else {
+            if (rightSpawn == 1) {
+              rightSpawn = 0;
+              pos = 4;
+            } else {
+              rightSpawn++;
+            }
+          }
+          cars[(i + 1) % cars.length].start(pos);
         }
       }
     }
@@ -406,7 +424,17 @@ class RaceGameController extends IGame {
     streetController.create(gameBoard.board);
     player.move(left);
     int first = math.Random().nextInt(10);
+    if (first < 5) {
+      leftSpawn++;
+    } else if (first > 4) {
+      rightSpawn++;
+    }
     int second = math.Random().nextInt(10);
+    if (second < 5) {
+      leftSpawn++;
+    } else if (second > 4) {
+      rightSpawn++;
+    }
     cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
   }
 

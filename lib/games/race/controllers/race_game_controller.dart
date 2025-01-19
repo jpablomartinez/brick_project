@@ -191,18 +191,20 @@ class RaceGameController extends IGame {
         if (car.body[3] == 12 && !cars[(i + 1) % cars.length].ready) {
           int pos = math.Random().nextInt(10);
           if (pos < 5) {
-            if (leftSpawn == 1) {
+            if (leftSpawn >= 2) {
               leftSpawn = 0;
               pos = 5;
             } else {
               leftSpawn++;
+              rightSpawn = 0;
             }
           } else {
-            if (rightSpawn == 1) {
+            if (rightSpawn >= 2) {
               rightSpawn = 0;
               pos = 4;
             } else {
               rightSpawn++;
+              leftSpawn = 0;
             }
           }
           cars[(i + 1) % cars.length].start(pos);
@@ -254,6 +256,7 @@ class RaceGameController extends IGame {
             gameState = GameStates.start;
           } else {
             gameState = GameStates.play;
+            audioSettings.playBackgroundAudio();
           }
           putElementsInBoard();
         }
@@ -277,6 +280,7 @@ class RaceGameController extends IGame {
       if (collisionController.isCollisionAnimatioFrameEnd()) {
         collisionController.restartCollisionAnimationFrame();
       } else if (collisionController.isCollisionAnimationComplete()) {
+        audioSettings.stop();
         gameState = GameStates.restartView;
         player.leftLane = true;
         collisionController.restartCollisionAnimation();

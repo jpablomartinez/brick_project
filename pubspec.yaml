@@ -58,6 +58,7 @@ flutter:
 
     assets:
         - assets/audios/
+        - assets/audios/race/
         #- assets/fonts/
 
     fonts:

@@ -157,7 +157,7 @@ class _RaceGameState extends State<RaceGameView> {
       speed: raceGameController.speed,
       level: raceGameController.level,
       gamepadActions: GamepadActions(
-        soundHandler: () {},
+        soundHandler: () => raceGameController.audioSettings.mute(),
         onOffHandler: () {},
         resetHandler: () {
           raceGameController.forceReset = true;

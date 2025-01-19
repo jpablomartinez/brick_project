@@ -62,13 +62,13 @@ class RaceGameController extends IGame {
     collisionController = CollisionController();
     restartController = RestartController();
     fpsController = FpsController();
-    audioSettings = AudioSettings();
+    setAudioSettings();
     player = Car(gameBoard);
     updateView = frameUpdate;
     restart();
     putElementsInBoard();
     update();
-    audioSettings.playSfx('audios/start.wav');
+    audioSettings.playSfx('audios/race/start.wav');
     gameState = GameStates.start;
   }
 
@@ -199,10 +199,11 @@ class RaceGameController extends IGame {
 
   void handleStartAnimation() {
     startTime += (1000 * fps);
-    if (startTime > 3000) {
+    if (startTime > 2000) {
       startTime = 0;
       gameState = GameStates.play;
       forceReset = false;
+      audioSettings.playBackgroundAudio();
     }
   }
 
@@ -222,15 +223,16 @@ class RaceGameController extends IGame {
         actualRow = row;
         restartController.resetRestartTime();
         if (checkGameOver()) {
-          audioSettings.playSfx('audios/game_over.wav');
           gameState = GameStates.gameover;
+          audioSettings.stop();
+          audioSettings.playSfx('audios/game_over.mp3');
           streetController.create(gameBoard.board);
           int first = math.Random().nextInt(10);
           int second = math.Random().nextInt(10);
           cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
         } else {
           if (forceReset) {
-            audioSettings.playSfx('audios/start.wav');
+            audioSettings.playSfx('audios/race/start.wav');
             gameState = GameStates.start;
           } else {
             gameState = GameStates.play;
@@ -298,12 +300,14 @@ class RaceGameController extends IGame {
   /// of 2 on the board), it decrements the player's lives and changes
   /// the game state to `collision`.
   void checkCollision() {
-    for (int i = 16; i < row; i++) {
+    bool collision = false;
+    for (int i = 16; i < row && !collision; i++) {
       for (int j = 0; j < colums; j++) {
         if (gameBoard.board[i][j] == 2) {
-          lives--;
           gameState = GameStates.collision;
-          audioSettings.playSfx('audios/collision.wav');
+          lives--;
+          audioSettings.playSfx('audios/race/collision.wav');
+          collision = true;
           break;
         }
       }
@@ -338,7 +342,7 @@ class RaceGameController extends IGame {
   /// and, if so, instructs the player's car to move left.
   void moveToLeft() {
     if (gameState == GameStates.play) {
-      audioSettings.playSfx('audios/arrow_button.wav');
+      audioSettings.playGamepad('audios/arrow_button.wav');
       player.moveToLeft();
     }
   }
@@ -349,7 +353,7 @@ class RaceGameController extends IGame {
   /// and, if so, instructs the player's car to move right.
   void moveToRight() {
     if (gameState == GameStates.play) {
-      audioSettings.playSfx('audios/arrow_button.wav');
+      audioSettings.playGamepad('audios/arrow_button.wav');
       player.moveToRight();
     }
   }
@@ -370,6 +374,7 @@ class RaceGameController extends IGame {
   @override
   void pause() {
     gameState = GameStates.pause;
+    audioSettings.pause();
   }
 
   /// Sets the game state to 'play'.
@@ -379,6 +384,7 @@ class RaceGameController extends IGame {
   @override
   void play() {
     gameState = GameStates.play;
+    audioSettings.resume();
   }
 
   /// Sets the acceleration state of the player's car.
@@ -402,5 +408,11 @@ class RaceGameController extends IGame {
     int first = math.Random().nextInt(10);
     int second = math.Random().nextInt(10);
     cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
+  }
+
+  @override
+  void setAudioSettings() {
+    audioSettings = AudioSettings();
+    audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
   }
 }

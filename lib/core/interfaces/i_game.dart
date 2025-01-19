@@ -13,4 +13,5 @@ abstract class IGame {
   void checkWin();
   void pause();
   void play();
+  void setAudioSettings();
 }

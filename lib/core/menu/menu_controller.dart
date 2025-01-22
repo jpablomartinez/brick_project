@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:brick_project/core/audio_manager.dart';
 import 'package:brick_project/core/interfaces/i_game.dart';
 
 class Game {
@@ -21,8 +22,10 @@ class MainMenuController extends IGame {
   late List<Game> games;
   late Timer frameTimer;
   late Function updateView;
+  late AudioSettings audioSettings;
 
   void upButton() {
+    audioSettings.playGamepad('audios/arrow_button.wav');
     int index = games.indexWhere((e) => e.selected == true);
     if (index > 0) {
       games[index].deselect();
@@ -31,6 +34,7 @@ class MainMenuController extends IGame {
   }
 
   void downButton() {
+    audioSettings.playGamepad('audios/arrow_button.wav');
     int index = games.indexWhere((e) => e.selected == true);
     if (index < games.length - 1) {
       games[index].deselect();
@@ -38,7 +42,9 @@ class MainMenuController extends IGame {
     }
   }
 
-  void selectedButton() {}
+  void selectedButton() {
+    audioSettings.playGamepad('audios/arrow_button.wav');
+  }
 
   void updateFrame() {
     updateView();
@@ -76,7 +82,8 @@ class MainMenuController extends IGame {
 
   @override
   void setAudioSettings() {
-    //
+    audioSettings = AudioSettings();
+    audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
   }
 
   @override
@@ -86,6 +93,8 @@ class MainMenuController extends IGame {
       Game(' snake', false),
       Game(' tetris', false),
     ];
+    setAudioSettings();
+    audioSettings.playBackgroundAudio();
     updateView = frameUpdate;
     update();
   }

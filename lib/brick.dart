@@ -1,4 +1,4 @@
-import 'package:brick_project/core/menu/main_menu_vuew.dart';
+import 'package:brick_project/core/menu/main_menu_view.dart';
 import 'package:brick_project/utils/colors.dart';
 import 'package:flutter/material.dart';
 

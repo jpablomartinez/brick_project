@@ -1,3 +1,4 @@
+import 'package:brick_project/core/audio_manager.dart';
 import 'package:brick_project/utils/colors.dart';
 import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
@@ -9,7 +10,12 @@ import 'package:flutter/material.dart';
 
 class RaceGameView extends StatefulWidget {
   final Size size;
-  const RaceGameView({super.key, required this.size});
+  final AudioSettings audioSettings;
+  const RaceGameView({
+    super.key,
+    required this.size,
+    required this.audioSettings,
+  });
 
   @override
   State<RaceGameView> createState() => _RaceGameState();
@@ -21,7 +27,7 @@ class _RaceGameState extends State<RaceGameView> {
 
   @override
   void initState() {
-    raceGameController = RaceGameController();
+    raceGameController = RaceGameController(widget.audioSettings);
     raceGameController.startGame(() => update());
     board = draw();
     super.initState();

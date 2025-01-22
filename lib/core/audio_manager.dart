@@ -7,10 +7,10 @@ import 'package:logger/web.dart';
 class AudioSettings implements IAudio {
   static final _logger = Logger();
 
-  final double _defaultBackgroundVolume = 0.35;
+  final double _defaultBackgroundVolume = 0.40;
   final double _reduceBackgroundVolume = 0.1;
   final double _defaultSfxVolume = 0.45;
-  final double _defaultGamepadVolume = 0.4;
+  final double _defaultGamepadVolume = 0.35;
 
   final AudioPlayer _background = AudioPlayer();
   final AudioPlayer _sfx = AudioPlayer();
@@ -56,6 +56,9 @@ class AudioSettings implements IAudio {
     try {
       if (!_audioOn) {
         return;
+      }
+      if (_gamepad.state == PlayerState.playing) {
+        await _gamepad.stop();
       }
       await _gamepad.play(AssetSource(source));
     } catch (err) {

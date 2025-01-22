@@ -50,6 +50,10 @@ class RaceGameController extends IGame {
   late List<NpcCar> cars;
   late AudioSettings audioSettings;
 
+  RaceGameController(AudioSettings audio) {
+    audioSettings = audio;
+  }
+
   /// Initializes and starts the race game.
   ///
   /// This method sets up the game board, initializes controllers, and places
@@ -64,7 +68,6 @@ class RaceGameController extends IGame {
     collisionController = CollisionController();
     restartController = RestartController();
     fpsController = FpsController();
-    setAudioSettings();
     player = Car(gameBoard);
     updateView = frameUpdate;
     restart();
@@ -445,7 +448,7 @@ class RaceGameController extends IGame {
 
   @override
   void setAudioSettings() {
-    audioSettings = AudioSettings();
-    audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
+    //audioSettings = AudioSettings();
+    //audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
   }
 }

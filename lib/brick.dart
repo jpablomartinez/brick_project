@@ -1,5 +1,5 @@
+import 'package:brick_project/core/menu/main_menu_vuew.dart';
 import 'package:brick_project/utils/colors.dart';
-import 'package:brick_project/games/race/race_game_view.dart';
 import 'package:flutter/material.dart';
 
 class BrickGames extends StatefulWidget {
@@ -19,7 +19,9 @@ class _BrickGamesState extends State<BrickGames> {
         height: size.height,
         //padding: const EdgeInsets.all(12),
         decoration: const BoxDecoration(color: BrickProjectColors.black),
-        child: RaceGameView(size: size),
+        child: MainMenuView(
+          size: size,
+        ), //RaceGameView(size: size),
       ),
     );
   }

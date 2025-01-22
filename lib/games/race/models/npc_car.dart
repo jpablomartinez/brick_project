@@ -64,8 +64,6 @@ class NpcCar {
     }
   }
 
-  void checkCollision() {}
-
   @override
   String toString() {
     return 'ready: $ready / column: $column';

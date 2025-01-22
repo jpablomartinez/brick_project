@@ -323,6 +323,7 @@ class RaceGameController extends IGame {
   /// the game state to `collision`.
   void checkCollision() {
     bool collision = false;
+    gameBoard.printBoard();
     for (int i = 16; i < row && !collision; i++) {
       for (int j = 0; j < colums; j++) {
         if (gameBoard.board[i][j] == 2) {

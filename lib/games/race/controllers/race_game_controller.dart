@@ -38,8 +38,8 @@ class RaceGameController extends IGame {
     raceCarGameSecondsPerLevel_9,
     raceCarGameSecondsPerLevel_10,
   ];
-  var gameState = GameStates.play;
   late GameBoard gameBoard;
+  var gameState = GameStates.play;
   late StreetController streetController;
   late CollisionController collisionController;
   late RestartController restartController;
@@ -145,8 +145,8 @@ class RaceGameController extends IGame {
   /// [timer] is the periodic timer triggering this method.
   @override
   void builder(Timer timer) {
-    //fpsController.calculateFPS();
-    //print(fpsController.fps);
+    fpsController.calculateFPS();
+    print(fpsController.fps);
     switch (gameState) {
       case GameStates.start:
         handleStartAnimation();
@@ -176,6 +176,7 @@ class RaceGameController extends IGame {
   /// game over conditions, and winning conditions, and updates the game level
   /// and player points accordingly. The street and car positions are updated
   /// periodically based on the local speed.
+  @override
   void handlePlayState() {
     updateTime++;
     gameTime += (1000 * fps);
@@ -220,6 +221,7 @@ class RaceGameController extends IGame {
     updatePoints();
   }
 
+  @override
   void handleStartAnimation() {
     startTime += (1000 * fps);
     if (startTime > 2000) {
@@ -237,6 +239,7 @@ class RaceGameController extends IGame {
   /// resets the restart time. Once the animation reaches the initial row,
   /// it resets the row, places elements back on the board, and changes
   /// the game state to play.
+  @override
   void handleRestartViewState() {
     restartController.restartTime += (1000 * fps);
     if (restartController.isDurationComplete()) {
@@ -275,6 +278,7 @@ class RaceGameController extends IGame {
   /// animation frame or the entire animation is complete, and updates
   /// the game state to restart view if necessary. Additionally, it
   /// resets the player's position and collision animation state.
+  @override
   void handleCollisionState() {
     collisionController.collisionTime += (1000 * fps);
     if (collisionController.isCollisionTimeComplete()) {
@@ -297,6 +301,7 @@ class RaceGameController extends IGame {
   /// the local speed threshold. If so, it updates the street and moves NPC cars
   /// that are ready. It also resets the update time and starts the next car
   /// in sequence if conditions are met.
+  @override
   void handleGameOver() {
     updateTime++;
     int localSpeed = 8;
@@ -326,7 +331,6 @@ class RaceGameController extends IGame {
   /// the game state to `collision`.
   void checkCollision() {
     bool collision = false;
-    gameBoard.printBoard();
     for (int i = 16; i < row && !collision; i++) {
       for (int j = 0; j < colums; j++) {
         if (gameBoard.board[i][j] == 2) {
@@ -366,7 +370,8 @@ class RaceGameController extends IGame {
   ///
   /// This method checks if the game is currently in the play state
   /// and, if so, instructs the player's car to move left.
-  void moveToLeft() {
+  @override
+  void left() {
     if (gameState == GameStates.play) {
       audioSettings.playGamepad('audios/arrow_button.wav');
       player.moveToLeft();
@@ -377,11 +382,29 @@ class RaceGameController extends IGame {
   ///
   /// This method checks if the game is currently in the play state
   /// and, if so, instructs the player's car to move right.
-  void moveToRight() {
+  @override
+  void right() {
     if (gameState == GameStates.play) {
       audioSettings.playGamepad('audios/arrow_button.wav');
       player.moveToRight();
     }
+  }
+
+  @override
+  void down() {}
+
+  @override
+  void up() {}
+
+  /// Sets the acceleration state of the player's car.
+  ///
+  /// This method updates the `accelerate` flag, which determines
+  /// whether the player's car is in an accelerated state.
+  ///
+  /// [value] A boolean indicating the desired acceleration state.
+  @override
+  void rotateButton(bool value) {
+    accelerate = value;
   }
 
   /// Updates the game frame by invoking the view update callback.
@@ -413,16 +436,6 @@ class RaceGameController extends IGame {
     audioSettings.resume();
   }
 
-  /// Sets the acceleration state of the player's car.
-  ///
-  /// This method updates the `accelerate` flag, which determines
-  /// whether the player's car is in an accelerated state.
-  ///
-  /// [value] A boolean indicating the desired acceleration state.
-  void acceleration(bool value) {
-    accelerate = value;
-  }
-
   /// Places game elements on the game board.
   ///
   /// This method initializes the street and moves the player's car to the left.
@@ -430,7 +443,7 @@ class RaceGameController extends IGame {
   /// the game board.
   void putElementsInBoard() {
     streetController.create(gameBoard.board);
-    player.move(left);
+    player.move(3);
     int first = math.Random().nextInt(10);
     if (first < 5) {
       leftSpawn++;
@@ -450,5 +463,75 @@ class RaceGameController extends IGame {
   void setAudioSettings() {
     //audioSettings = AudioSettings();
     //audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
+  }
+
+  @override
+  GameBoard getGameBoard() {
+    return gameBoard;
+  }
+
+  @override
+  GameStates getGameStates() {
+    return gameState;
+  }
+
+  @override
+  int getLevel() {
+    return level;
+  }
+
+  @override
+  int getLives() {
+    return lives;
+  }
+
+  @override
+  int getPoints() {
+    return points;
+  }
+
+  @override
+  int getSpeed() {
+    return speed;
+  }
+
+  @override
+  void setGameBoard(GameBoard board) {
+    gameBoard = board;
+  }
+
+  @override
+  void setGameStates(GameStates state) {
+    gameState = state;
+  }
+
+  @override
+  void setLevel(int value) {
+    level = value;
+  }
+
+  @override
+  void setLives(int value) {
+    lives = value;
+  }
+
+  @override
+  void setPoints(int value) {
+    points = value;
+  }
+
+  @override
+  void setSpeed(int value) {
+    speed = value;
+  }
+
+  @override
+  bool getResetGame() {
+    return forceReset;
+  }
+
+  @override
+  void setResetGame(bool value) {
+    forceReset = value;
   }
 }

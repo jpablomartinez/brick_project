@@ -10,6 +10,10 @@ class GameBoard {
     board = List.generate(row, (_) => List.filled(colums, 0));
   }
 
+  bool cellIsOne(int row, int col) {
+    return board[row][col] == 1;
+  }
+
   void printBoard() {
     for (int i = 0; i < row; i++) {
       debugPrint(" ${board[i].join(' ')} ", wrapWidth: 1024);

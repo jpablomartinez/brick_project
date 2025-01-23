@@ -1,4 +1,4 @@
-import 'package:brick_project/core/menu/main_menu_view.dart';
+import 'package:brick_project/core/game_view.dart';
 import 'package:brick_project/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class _BrickGamesState extends State<BrickGames> {
         height: size.height,
         //padding: const EdgeInsets.all(12),
         decoration: const BoxDecoration(color: BrickProjectColors.black),
-        child: MainMenuView(
+        child: GameView(
           size: size,
         ), //RaceGameView(size: size),
       ),

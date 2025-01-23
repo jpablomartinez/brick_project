@@ -1,3 +1,4 @@
+const double fps = 1 / 60;
 const int row = 20;
 const int colums = 10;
 
@@ -12,6 +13,7 @@ enum GameStates {
   win,
   restartView,
   collision,
+  menu,
 }
 
 const int raceCarGameLives = 4;

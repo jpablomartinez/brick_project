@@ -10,7 +10,7 @@ class AudioSettings implements IAudio {
   final double _defaultBackgroundVolume = 0.40;
   final double _reduceBackgroundVolume = 0.1;
   final double _defaultSfxVolume = 0.45;
-  final double _defaultGamepadVolume = 0.35;
+  final double _defaultGamepadVolume = 0.25;
 
   final AudioPlayer _background = AudioPlayer();
   final AudioPlayer _sfx = AudioPlayer();

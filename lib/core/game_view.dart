@@ -24,6 +24,7 @@ class _GameViewState extends State<GameView> {
   late IGame gameController;
   late AudioSettings audioSettings;
   Widget board = const SizedBox();
+  Widget lives = const SizedBox();
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _GameViewState extends State<GameView> {
     gameController = RaceGameController(audioSettings);
     gameController.startGame(() => update());
     board = draw();
+    lives = renderLives();
     super.initState();
   }
 
@@ -146,45 +148,48 @@ class _GameViewState extends State<GameView> {
   void update() {
     setState(() {
       board = draw();
+      lives = renderLives();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GameLayout(
-      gamepad: Gamepad(
-        leftButton: () => gameController.left(),
-        topButton: () => gameController.up(),
-        rightButton: () => gameController.right(),
-        bottomButton: () => gameController.down(),
-        rotateButtonDown: () => gameController.rotateButton(true),
-        rotateButtonUp: () => gameController.rotateButton(false),
-      ),
-      points: gameController.getPoints(),
-      lives: renderLives(),
-      speed: gameController.getSpeed(),
-      level: gameController.getLevel(),
-      gamepadActions: GamepadActions(
-        soundHandler: () => audioSettings.mute(),
-        onOffHandler: () {},
-        resetHandler: () {
-          gameController.setResetGame(true);
-          audioSettings.stop();
-          gameController.setGameStates(GameStates.restartView);
-          gameController.restart();
-        },
-        pauseHandler: () {
-          if (gameController.getGameStates() == GameStates.pause) {
-            gameController.play();
-          } else if (gameController.getGameStates() == GameStates.play) {
-            gameController.pause();
-          }
-        },
-      ),
-      gameOver: gameController.getGameStates() == GameStates.gameover,
-      child: Container(
-        color: BrickProjectColors.background,
-        child: board,
+    return RepaintBoundary(
+      child: GameLayout(
+        gamepad: Gamepad(
+          leftButton: () => gameController.left(),
+          topButton: () => gameController.up(),
+          rightButton: () => gameController.right(),
+          bottomButton: () => gameController.down(),
+          rotateButtonDown: () => gameController.rotateButton(true),
+          rotateButtonUp: () => gameController.rotateButton(false),
+        ),
+        points: gameController.getPoints(),
+        lives: lives,
+        speed: gameController.getSpeed(),
+        level: gameController.getLevel(),
+        gamepadActions: GamepadActions(
+          soundHandler: () => audioSettings.mute(),
+          onOffHandler: () {},
+          resetHandler: () {
+            gameController.setResetGame(true);
+            audioSettings.stop();
+            gameController.setGameStates(GameStates.restartView);
+            gameController.restart();
+          },
+          pauseHandler: () {
+            if (gameController.getGameStates() == GameStates.pause) {
+              gameController.play();
+            } else if (gameController.getGameStates() == GameStates.play) {
+              gameController.pause();
+            }
+          },
+        ),
+        gameOver: gameController.getGameStates() == GameStates.gameover,
+        child: Container(
+          color: BrickProjectColors.background,
+          child: board,
+        ),
       ),
     );
   }

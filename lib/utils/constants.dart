@@ -14,9 +14,10 @@ enum GameStates {
   restartView,
   collision,
   menu,
+  none,
 }
 
-const int raceCarGameLives = 4;
+const int maxLives = 4;
 const int raceCarGameSecondsPerLevel_1 = 20;
 const int raceCarGameSecondsPerLevel_2 = 45;
 const int raceCarGameSecondsPerLevel_3 = 75;

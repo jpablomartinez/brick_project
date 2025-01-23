@@ -7,8 +7,7 @@ import 'package:logger/web.dart';
 class AudioSettings implements IAudio {
   static final _logger = Logger();
 
-  final double _defaultBackgroundVolume = 0.40;
-  final double _reduceBackgroundVolume = 0.1;
+  final double _defaultBackgroundVolume = 0.60;
   final double _defaultSfxVolume = 0.45;
   final double _defaultGamepadVolume = 0.25;
 
@@ -24,6 +23,7 @@ class AudioSettings implements IAudio {
     _background.setVolume(_defaultBackgroundVolume);
     _sfx.setVolume(_defaultSfxVolume);
     _gamepad.setVolume(_defaultGamepadVolume);
+    _backgroundSongs = Queue();
   }
 
   /// Adds a list of background songs to the queue for playback.
@@ -39,6 +39,7 @@ class AudioSettings implements IAudio {
     if (songs.isEmpty) {
       return;
     }
+    _backgroundSongs.clear();
     _backgroundSongs = Queue.of(songs);
     _background.onPlayerComplete.listen(_handleCompleteSong);
   }
@@ -84,9 +85,14 @@ class AudioSettings implements IAudio {
   Future<void> playBackgroundAudio() async {
     try {
       if (!_audioOn || _backgroundSongs.isEmpty) {
+        _logger.d('No songs to play.');
         return;
       }
-      await _background.play(AssetSource(_backgroundSongs.first));
+      if (_background.state == PlayerState.paused) {
+        await _background.resume();
+      } else {
+        await _background.play(AssetSource(_backgroundSongs.first));
+      }
     } catch (err) {
       _logger.e(err);
     }
@@ -111,10 +117,7 @@ class AudioSettings implements IAudio {
   ///
   /// This method attempts to play a sound effect using the provided source
   /// path. If audio is disabled, the method returns immediately without
-  /// playing the sound. While a sound effect is playing, the background
-  /// audio volume is reduced. Once the sound effect completes and if the
-  /// background audio is still playing, the background volume is restored
-  /// to its default level. Errors during playback are logged using the
+  /// playing the sound. Errors during playback are logged using the
   /// internal logger.
   ///
   /// [source] The path or identifier of the audio file to be played.
@@ -124,13 +127,7 @@ class AudioSettings implements IAudio {
       if (!_audioOn) {
         return;
       }
-      if (_background.state == PlayerState.playing) {
-        _background.setVolume(_reduceBackgroundVolume);
-      }
       await _sfx.play(AssetSource(source));
-      if (_sfx.state == PlayerState.completed && _background.state == PlayerState.playing) {
-        _background.setVolume(_defaultBackgroundVolume);
-      }
     } catch (err) {
       _logger.e(err);
     }

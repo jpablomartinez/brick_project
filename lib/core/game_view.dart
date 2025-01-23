@@ -1,9 +1,10 @@
-import 'package:brick_project/core/audio_manager.dart';
+import 'package:brick_project/core/game_controller.dart';
 import 'package:brick_project/core/interfaces/i_game.dart';
-import 'package:brick_project/games/race/controllers/race_game_controller.dart';
+import 'package:brick_project/core/menu/main_menu_controller.dart';
 import 'package:brick_project/utils/colors.dart';
 import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
+import 'package:brick_project/widgets/game_selector.dart';
 import 'package:brick_project/widgets/gamepad.dart';
 import 'package:brick_project/widgets/gamepad_actions.dart';
 import 'package:brick_project/widgets/square.dart';
@@ -21,17 +22,16 @@ class GameView extends StatefulWidget {
 }
 
 class _GameViewState extends State<GameView> {
-  late IGame gameController;
-  late AudioSettings audioSettings;
   Widget board = const SizedBox();
   Widget lives = const SizedBox();
+  late BrickController brickController;
+  late IGame gameController;
 
   @override
   void initState() {
-    audioSettings = AudioSettings();
-    audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
-    gameController = RaceGameController(audioSettings);
-    gameController.startGame(() => update());
+    brickController = BrickController(update);
+    gameController = MainMenuController(brickController, selectGame);
+    //gameController.startGame(() => update());
     board = draw();
     lives = renderLives();
     super.initState();
@@ -42,35 +42,54 @@ class _GameViewState extends State<GameView> {
     super.dispose();
   }
 
+  void selectGame() {
+    gameController = brickController.selectGame() ?? MainMenuController(brickController, () {});
+    gameController.startGame();
+  }
+
   Widget draw() {
     //area game
     //area game height = size.height * 0.68,
     //area game width = size.width * 0.7
     //square = size.width * 0.7 / 10
-    List<Widget> rows = [];
-    List<Widget> cols = [];
-    for (int i = 0; i < row; i++) {
-      for (int j = 0; j < colums; j++) {
-        if (gameController.getGameBoard().cellIsOne(i, j)) {
-          cols.add(
-            const Square(
-              width: 27,
-              height: 27,
-            ),
-          );
-        } else {
-          cols.add(
-            const BackgroundSquare(
-              width: 27,
-              height: 27,
-            ),
-          );
-        }
+
+    if (brickController.gameState == GameStates.menu) {
+      List<Widget> games = [];
+      for (var game in brickController.games) {
+        games.add(
+          GameSelector(
+            title: game.title.toUpperCase(),
+            selected: game.selected,
+          ),
+        );
       }
-      rows.add(Row(children: cols));
-      cols = [];
+      return Column(children: games);
+    } else {
+      List<Widget> rows = [];
+      List<Widget> cols = [];
+      for (int i = 0; i < row; i++) {
+        for (int j = 0; j < colums; j++) {
+          if (brickController.gameBoard.cellIsOne(i, j)) {
+            cols.add(
+              const Square(
+                width: 27,
+                height: 27,
+              ),
+            );
+          } else {
+            cols.add(
+              const BackgroundSquare(
+                width: 27,
+                height: 27,
+              ),
+            );
+          }
+        }
+        rows.add(Row(children: cols));
+        cols = [];
+      }
+      return Column(children: rows);
     }
-    return Column(children: rows);
   }
 
   Widget renderLives() {
@@ -169,23 +188,25 @@ class _GameViewState extends State<GameView> {
         speed: gameController.getSpeed(),
         level: gameController.getLevel(),
         gamepadActions: GamepadActions(
-          soundHandler: () => audioSettings.mute(),
+          soundHandler: () => brickController.audioSettings.mute(),
           onOffHandler: () {},
           resetHandler: () {
-            gameController.setResetGame(true);
-            audioSettings.stop();
-            gameController.setGameStates(GameStates.restartView);
-            gameController.restart();
+            if (brickController.gameState != GameStates.menu) {
+              gameController.setResetGame(true);
+              brickController.audioSettings.stop();
+              brickController.gameState = GameStates.restartView;
+              gameController.restart();
+            }
           },
           pauseHandler: () {
-            if (gameController.getGameStates() == GameStates.pause) {
+            if (brickController.gameState == GameStates.pause) {
               gameController.play();
-            } else if (gameController.getGameStates() == GameStates.play) {
+            } else if (brickController.gameState == GameStates.play) {
               gameController.pause();
             }
           },
         ),
-        gameOver: gameController.getGameStates() == GameStates.gameover,
+        gameOver: brickController.gameState == GameStates.gameover,
         child: Container(
           color: BrickProjectColors.background,
           child: board,

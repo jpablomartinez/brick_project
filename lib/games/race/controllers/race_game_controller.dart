@@ -1,11 +1,7 @@
-import 'dart:async';
 import 'dart:math' as math;
-import 'package:brick_project/core/audio_manager.dart';
+import 'package:brick_project/core/game_controller.dart';
 import 'package:brick_project/utils/constants.dart';
-import 'package:brick_project/core/fps_controller.dart';
-import 'package:brick_project/core/game_board.dart';
 import 'package:brick_project/core/interfaces/i_game.dart';
-import 'package:brick_project/core/restart_controller.dart';
 import 'package:brick_project/games/race/controllers/collision_controller.dart';
 import 'package:brick_project/games/race/controllers/street_controller.dart';
 import 'package:brick_project/games/race/models/car.dart';
@@ -18,7 +14,7 @@ class RaceGameController extends IGame {
   int rightSpawn = 0;
   bool accelerate = false;
   int points = 0;
-  int lives = raceCarGameLives;
+  int lives = maxLives;
   double updateTime = 0;
   double gameTime = 0;
   double startTime = 0;
@@ -38,20 +34,20 @@ class RaceGameController extends IGame {
     raceCarGameSecondsPerLevel_9,
     raceCarGameSecondsPerLevel_10,
   ];
-  late GameBoard gameBoard;
-  var gameState = GameStates.play;
+  late BrickController brickController;
   late StreetController streetController;
   late CollisionController collisionController;
-  late RestartController restartController;
-  late FpsController fpsController;
-  late Timer frameTimer;
-  late Function updateView;
   late Car player;
   late List<NpcCar> cars;
-  late AudioSettings audioSettings;
 
-  RaceGameController(AudioSettings audio) {
-    audioSettings = audio;
+  RaceGameController(BrickController controller) {
+    brickController = controller;
+    brickController.handleStartAnimation = handleStartAnimation;
+    brickController.handlePlayState = handlePlayState;
+    brickController.handleRestartViewState = handleRestartViewState;
+    brickController.handleCollisionState = handleCollisionState;
+    brickController.handleGameOver = handleGameOver;
+    setAudioSettings();
   }
 
   /// Initializes and starts the race game.
@@ -62,32 +58,14 @@ class RaceGameController extends IGame {
   ///
   /// [frameUpdate] is a callback function that updates the game view.
   @override
-  void startGame(Function frameUpdate) {
-    gameBoard = GameBoard();
+  void startGame() {
     streetController = StreetController();
     collisionController = CollisionController();
-    restartController = RestartController();
-    fpsController = FpsController();
-    player = Car(gameBoard);
-    updateView = frameUpdate;
+    player = Car(brickController.gameBoard);
     restart();
     putElementsInBoard();
-    update();
-    audioSettings.playSfx('audios/race/start.wav');
-    gameState = GameStates.start;
-  }
-
-  /// Starts a periodic timer to update the game state.
-  ///
-  /// This method initializes a `Timer` that triggers the `builder` method
-  /// at intervals determined by the frames per second (fps) setting. The
-  /// `builder` method is responsible for handling the current game state
-  /// and updating the game frame accordingly.
-  @override
-  void update() {
-    frameTimer = Timer.periodic(Duration(milliseconds: (1000 * fps).floor()), (timer) {
-      builder(timer);
-    });
+    brickController.audioSettings.playSfx('audios/race/start.wav');
+    brickController.gameState = GameStates.start;
   }
 
   /// Resets the game state to its initial values.
@@ -96,7 +74,7 @@ class RaceGameController extends IGame {
   /// points, speed, level, and acceleration status to their starting values.
   @override
   void restart() {
-    lives = raceCarGameLives;
+    lives = maxLives;
     gameTime = 0;
     points = 0;
     speed = 1;
@@ -134,41 +112,6 @@ class RaceGameController extends IGame {
     }
   }
 
-  /// Handles the game state updates based on the current game state.
-  ///
-  /// This method is called periodically by a timer to update the game state.
-  /// It checks the current `gameState` and calls the appropriate handler
-  /// method (`handlePlayState`, `handleRestartViewState`, or `handleCollisionState`)
-  /// to manage the game logic for that state. After handling the state, it
-  /// updates the game frame.
-  ///
-  /// [timer] is the periodic timer triggering this method.
-  @override
-  void builder(Timer timer) {
-    fpsController.calculateFPS();
-    print(fpsController.fps);
-    switch (gameState) {
-      case GameStates.start:
-        handleStartAnimation();
-        break;
-      case GameStates.play:
-        handlePlayState();
-        break;
-      case GameStates.restartView:
-        handleRestartViewState();
-        break;
-      case GameStates.collision:
-        handleCollisionState();
-        break;
-      case GameStates.gameover:
-        handleGameOver();
-        break;
-      default:
-        break;
-    }
-    updateFrame();
-  }
-
   /// Handles the play state of the race game.
   ///
   /// This method updates the game time and manages the movement of NPC cars
@@ -182,7 +125,7 @@ class RaceGameController extends IGame {
     gameTime += (1000 * fps);
     int localSpeed = accelerate ? 3 : 8 - speed;
     if (updateTime >= localSpeed) {
-      streetController.update(gameBoard.board);
+      streetController.update(brickController.gameBoard.board);
       for (final car in cars) {
         if (car.ready) {
           car.clear();
@@ -226,9 +169,9 @@ class RaceGameController extends IGame {
     startTime += (1000 * fps);
     if (startTime > 2000) {
       startTime = 0;
-      gameState = GameStates.play;
+      brickController.gameState = GameStates.play;
       forceReset = false;
-      audioSettings.playBackgroundAudio();
+      brickController.audioSettings.playBackgroundAudio();
     }
   }
 
@@ -241,28 +184,28 @@ class RaceGameController extends IGame {
   /// the game state to play.
   @override
   void handleRestartViewState() {
-    restartController.restartTime += (1000 * fps);
-    if (restartController.isDurationComplete()) {
-      restartController.restartAnimation(gameBoard.board, actualRow--);
-      restartController.resetRestartTime();
+    brickController.restartController.restartTime += (1000 * fps);
+    if (brickController.restartController.isDurationComplete()) {
+      brickController.restartController.restartAnimation(brickController.gameBoard.board, actualRow--);
+      brickController.restartController.resetRestartTime();
       if (actualRow == row * -1) {
         actualRow = row;
-        restartController.resetRestartTime();
+        brickController.restartController.resetRestartTime();
         if (checkGameOver()) {
-          gameState = GameStates.gameover;
-          audioSettings.stop();
-          audioSettings.playSfx('audios/game_over.mp3');
-          streetController.create(gameBoard.board);
+          brickController.gameState = GameStates.gameover;
+          brickController.audioSettings.stop();
+          brickController.audioSettings.playSfx('audios/game_over.mp3');
+          streetController.create(brickController.gameBoard.board);
           int first = math.Random().nextInt(10);
           int second = math.Random().nextInt(10);
-          cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
+          cars = [NpcCar(first, brickController.gameBoard), NpcCar(second, brickController.gameBoard, r: false)];
         } else {
           if (forceReset) {
-            audioSettings.playSfx('audios/race/start.wav');
-            gameState = GameStates.start;
+            brickController.audioSettings.playSfx('audios/race/start.wav');
+            brickController.gameState = GameStates.start;
           } else {
-            gameState = GameStates.play;
-            audioSettings.playBackgroundAudio();
+            brickController.gameState = GameStates.play;
+            brickController.audioSettings.playBackgroundAudio();
           }
           putElementsInBoard();
         }
@@ -282,13 +225,13 @@ class RaceGameController extends IGame {
   void handleCollisionState() {
     collisionController.collisionTime += (1000 * fps);
     if (collisionController.isCollisionTimeComplete()) {
-      collisionController.collisionAnimation(gameBoard.board, player);
+      collisionController.collisionAnimation(brickController.gameBoard.board, player);
       collisionController.restartCollisionTime();
       if (collisionController.isCollisionAnimatioFrameEnd()) {
         collisionController.restartCollisionAnimationFrame();
       } else if (collisionController.isCollisionAnimationComplete()) {
-        audioSettings.stop();
-        gameState = GameStates.restartView;
+        brickController.audioSettings.pause();
+        brickController.gameState = GameStates.restartView;
         player.leftLane = true;
         collisionController.restartCollisionAnimation();
       }
@@ -306,7 +249,7 @@ class RaceGameController extends IGame {
     updateTime++;
     int localSpeed = 8;
     if (updateTime >= localSpeed) {
-      streetController.update(gameBoard.board);
+      streetController.update(brickController.gameBoard.board);
       for (final car in cars) {
         if (car.ready) {
           car.clear();
@@ -333,10 +276,10 @@ class RaceGameController extends IGame {
     bool collision = false;
     for (int i = 16; i < row && !collision; i++) {
       for (int j = 0; j < colums; j++) {
-        if (gameBoard.board[i][j] == 2) {
-          gameState = GameStates.collision;
+        if (brickController.gameBoard.board[i][j] == 2) {
+          brickController.gameState = GameStates.collision;
           lives--;
-          audioSettings.playSfx('audios/race/collision.wav');
+          brickController.audioSettings.playSfx('audios/race/collision.wav');
           collision = true;
           break;
         }
@@ -362,7 +305,7 @@ class RaceGameController extends IGame {
   @override
   void checkWin() {
     if (level == 10 && (gameTime / 1000).floor() == raceCarGameSecondsPerLevel_10) {
-      gameState = GameStates.win;
+      brickController.gameState = GameStates.win;
     }
   }
 
@@ -372,8 +315,8 @@ class RaceGameController extends IGame {
   /// and, if so, instructs the player's car to move left.
   @override
   void left() {
-    if (gameState == GameStates.play) {
-      audioSettings.playGamepad('audios/arrow_button.wav');
+    if (brickController.gameState == GameStates.play) {
+      brickController.audioSettings.playGamepad('audios/arrow_button.wav');
       player.moveToLeft();
     }
   }
@@ -384,8 +327,8 @@ class RaceGameController extends IGame {
   /// and, if so, instructs the player's car to move right.
   @override
   void right() {
-    if (gameState == GameStates.play) {
-      audioSettings.playGamepad('audios/arrow_button.wav');
+    if (brickController.gameState == GameStates.play) {
+      brickController.audioSettings.playGamepad('audios/arrow_button.wav');
       player.moveToRight();
     }
   }
@@ -407,23 +350,14 @@ class RaceGameController extends IGame {
     accelerate = value;
   }
 
-  /// Updates the game frame by invoking the view update callback.
-  ///
-  /// This method is responsible for refreshing the game view by calling
-  /// the `updateView` function, which is expected to update the visual
-  /// representation of the game state.
-  void updateFrame() {
-    updateView();
-  }
-
   /// Pauses the race game.
   ///
   /// This method sets the game state to `pause`, halting all game
   /// activities until the game is resumed.
   @override
   void pause() {
-    gameState = GameStates.pause;
-    audioSettings.pause();
+    brickController.gameState = GameStates.pause;
+    brickController.audioSettings.pause();
   }
 
   /// Sets the game state to 'play'.
@@ -432,8 +366,8 @@ class RaceGameController extends IGame {
   /// the game to resume or continue its active state.
   @override
   void play() {
-    gameState = GameStates.play;
-    audioSettings.resume();
+    brickController.gameState = GameStates.play;
+    brickController.audioSettings.resume();
   }
 
   /// Places game elements on the game board.
@@ -442,7 +376,7 @@ class RaceGameController extends IGame {
   /// It also randomly generates positions for two NPC cars and places them on
   /// the game board.
   void putElementsInBoard() {
-    streetController.create(gameBoard.board);
+    streetController.create(brickController.gameBoard.board);
     player.move(3);
     int first = math.Random().nextInt(10);
     if (first < 5) {
@@ -456,23 +390,13 @@ class RaceGameController extends IGame {
     } else if (second > 4) {
       rightSpawn++;
     }
-    cars = [NpcCar(first, gameBoard), NpcCar(second, gameBoard, r: false)];
+    cars = [NpcCar(first, brickController.gameBoard), NpcCar(second, brickController.gameBoard, r: false)];
   }
 
   @override
   void setAudioSettings() {
     //audioSettings = AudioSettings();
-    //audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
-  }
-
-  @override
-  GameBoard getGameBoard() {
-    return gameBoard;
-  }
-
-  @override
-  GameStates getGameStates() {
-    return gameState;
+    brickController.audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
   }
 
   @override
@@ -493,16 +417,6 @@ class RaceGameController extends IGame {
   @override
   int getSpeed() {
     return speed;
-  }
-
-  @override
-  void setGameBoard(GameBoard board) {
-    gameBoard = board;
-  }
-
-  @override
-  void setGameStates(GameStates state) {
-    gameState = state;
   }
 
   @override

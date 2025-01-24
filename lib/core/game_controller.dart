@@ -65,8 +65,8 @@ class BrickController {
   ///
   /// [timer] is the periodic timer triggering this method.
   void builder(Timer timer) {
-    //fpsController.calculateFPS();
-    //print(fpsController.fps);
+    fpsController.calculateFPS();
+    print(fpsController.fps);
     switch (gameState) {
       case GameStates.start:
         handleStartAnimation();

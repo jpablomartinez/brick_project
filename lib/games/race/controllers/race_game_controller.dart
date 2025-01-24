@@ -20,6 +20,7 @@ class RaceGameController extends IGame {
   double startTime = 0;
   bool full = true;
   bool forceReset = false;
+  bool isGameOn = true;
   int actualRow = row;
   List<int> levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   List<int> raceCarGameLevels = [
@@ -191,23 +192,30 @@ class RaceGameController extends IGame {
       if (actualRow == row * -1) {
         actualRow = row;
         brickController.restartController.resetRestartTime();
-        if (checkGameOver()) {
-          brickController.gameState = GameStates.gameover;
-          brickController.audioSettings.stop();
-          brickController.audioSettings.playSfx('audios/game_over.mp3');
-          streetController.create(brickController.gameBoard.board);
-          int first = math.Random().nextInt(10);
-          int second = math.Random().nextInt(10);
-          cars = [NpcCar(first, brickController.gameBoard), NpcCar(second, brickController.gameBoard, r: false)];
-        } else {
-          if (forceReset) {
-            brickController.audioSettings.playSfx('audios/race/start.wav');
-            brickController.gameState = GameStates.start;
+        if (isGameOn) {
+          if (checkGameOver()) {
+            brickController.gameState = GameStates.gameover;
+            brickController.audioSettings.stop();
+            brickController.audioSettings.playSfx('audios/game_over.mp3');
+            streetController.create(brickController.gameBoard.board);
+            int first = math.Random().nextInt(10);
+            int second = math.Random().nextInt(10);
+            cars = [NpcCar(first, brickController.gameBoard), NpcCar(second, brickController.gameBoard, r: false)];
           } else {
-            brickController.gameState = GameStates.play;
-            brickController.audioSettings.playBackgroundAudio();
+            if (forceReset) {
+              brickController.audioSettings.playSfx('audios/race/start.wav');
+              brickController.gameState = GameStates.start;
+            } else {
+              brickController.gameState = GameStates.play;
+              brickController.audioSettings.playBackgroundAudio();
+            }
+            putElementsInBoard();
           }
-          putElementsInBoard();
+        } else {
+          isGameOn = false;
+          brickController.gameState = GameStates.menu;
+          brickController.audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
+          brickController.audioSettings.playBackgroundAudio();
         }
       }
     }
@@ -447,5 +455,13 @@ class RaceGameController extends IGame {
   @override
   void setResetGame(bool value) {
     forceReset = value;
+  }
+
+  @override
+  void shutdownGame() {
+    isGameOn = false;
+    brickController.gameState = GameStates.pause;
+    brickController.audioSettings.stop();
+    brickController.gameState = GameStates.restartView;
   }
 }

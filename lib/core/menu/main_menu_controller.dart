@@ -198,4 +198,9 @@ class MainMenuController extends IGame {
   void updatePoints() {
     //
   }
+
+  @override
+  void shutdownGame() {
+    //
+  }
 }

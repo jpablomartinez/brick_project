@@ -28,4 +28,5 @@ abstract class IGame {
   void handleGameOver();
   void handleRestartViewState();
   void setResetGame(bool value);
+  void shutdownGame();
 }

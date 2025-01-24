@@ -24,6 +24,7 @@ class GameView extends StatefulWidget {
 class _GameViewState extends State<GameView> {
   Widget board = const SizedBox();
   Widget lives = const SizedBox();
+  bool isMenuSetted = false;
   late BrickController brickController;
   late IGame gameController;
 
@@ -31,6 +32,7 @@ class _GameViewState extends State<GameView> {
   void initState() {
     brickController = BrickController(update);
     gameController = MainMenuController(brickController, selectGame);
+    isMenuSetted = true;
     //gameController.startGame(() => update());
     board = draw();
     lives = renderLives();
@@ -44,6 +46,7 @@ class _GameViewState extends State<GameView> {
 
   void selectGame() {
     gameController = brickController.selectGame() ?? MainMenuController(brickController, () {});
+    isMenuSetted = false;
     gameController.startGame();
   }
 
@@ -52,8 +55,11 @@ class _GameViewState extends State<GameView> {
     //area game height = size.height * 0.68,
     //area game width = size.width * 0.7
     //square = size.width * 0.7 / 10
-
     if (brickController.gameState == GameStates.menu) {
+      if (!isMenuSetted) {
+        gameController = MainMenuController(brickController, selectGame);
+        isMenuSetted = true;
+      }
       List<Widget> games = [];
       for (var game in brickController.games) {
         games.add(
@@ -65,6 +71,10 @@ class _GameViewState extends State<GameView> {
       }
       return Column(children: games);
     } else {
+      /*return CustomPaint(
+        size: Size(widget.size.width * 0.7, widget.size.height * 0.68),
+        painter: GameBoardCell(brickController.gameBoard.board),
+      );*/
       List<Widget> rows = [];
       List<Widget> cols = [];
       for (int i = 0; i < row; i++) {
@@ -189,7 +199,7 @@ class _GameViewState extends State<GameView> {
         level: gameController.getLevel(),
         gamepadActions: GamepadActions(
           soundHandler: () => brickController.audioSettings.mute(),
-          onOffHandler: () {},
+          onOffHandler: () => gameController.shutdownGame(),
           resetHandler: () {
             if (brickController.gameState != GameStates.menu) {
               gameController.setResetGame(true);

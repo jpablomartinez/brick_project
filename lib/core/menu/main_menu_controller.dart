@@ -2,15 +2,12 @@ import 'package:brick_project/core/game_controller.dart';
 import 'package:brick_project/core/interfaces/i_game.dart';
 import 'package:brick_project/utils/constants.dart';
 
-class MainMenuController extends IGame {
+class MainMenuController implements IGame {
   late BrickController brickController;
   late Function selectGame;
   int actualRow = row;
 
-  MainMenuController(this.brickController, Function sg) {
-    brickController.handleRestartViewState = handleRestartViewState;
-    selectGame = sg;
-  }
+  MainMenuController(this.brickController, this.selectGame);
 
   @override
   bool checkGameOver() {

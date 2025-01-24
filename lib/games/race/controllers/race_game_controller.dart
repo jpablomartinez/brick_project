@@ -7,7 +7,7 @@ import 'package:brick_project/games/race/controllers/street_controller.dart';
 import 'package:brick_project/games/race/models/car.dart';
 import 'package:brick_project/games/race/models/npc_car.dart';
 
-class RaceGameController extends IGame {
+class RaceGameController implements IGame {
   int level = 1;
   int speed = 1;
   int leftSpawn = 0;
@@ -41,13 +41,7 @@ class RaceGameController extends IGame {
   late Car player;
   late List<NpcCar> cars;
 
-  RaceGameController(BrickController controller) {
-    brickController = controller;
-    brickController.handleStartAnimation = handleStartAnimation;
-    brickController.handlePlayState = handlePlayState;
-    brickController.handleRestartViewState = handleRestartViewState;
-    brickController.handleCollisionState = handleCollisionState;
-    brickController.handleGameOver = handleGameOver;
+  RaceGameController(this.brickController) {
     setAudioSettings();
   }
 

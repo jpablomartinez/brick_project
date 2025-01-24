@@ -30,13 +30,9 @@ class BrickController {
   late RestartController restartController;
   late GameBoard gameBoard;
   late GameStates gameState;
-  late Function handleStartAnimation;
-  late Function handlePlayState;
-  late Function handleRestartViewState;
-  late Function handleCollisionState;
-  late Function handleGameOver;
   late Timer frameTimer;
   late Function updateView;
+  late IGame gameController;
 
   BrickController(Function u) {
     games = [
@@ -55,6 +51,10 @@ class BrickController {
     update();
   }
 
+  void setGameController(IGame controller) {
+    gameController = controller;
+  }
+
   /// Handles the game state updates based on the current game state.
   ///
   /// This method is called periodically by a timer to update the game state.
@@ -69,19 +69,19 @@ class BrickController {
     print(fpsController.fps);
     switch (gameState) {
       case GameStates.start:
-        handleStartAnimation();
+        gameController.handleStartAnimation();
         break;
       case GameStates.play:
-        handlePlayState();
+        gameController.handlePlayState();
         break;
       case GameStates.restartView:
-        handleRestartViewState();
+        gameController.handleRestartViewState();
         break;
       case GameStates.collision:
-        handleCollisionState();
+        gameController.handleCollisionState();
         break;
       case GameStates.gameover:
-        handleGameOver();
+        gameController.handleGameOver();
         break;
       default:
         break;

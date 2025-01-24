@@ -32,6 +32,7 @@ class _GameViewState extends State<GameView> {
   void initState() {
     brickController = BrickController(update);
     gameController = MainMenuController(brickController, selectGame);
+    brickController.setGameController(gameController);
     isMenuSetted = true;
     //gameController.startGame(() => update());
     board = draw();
@@ -46,6 +47,7 @@ class _GameViewState extends State<GameView> {
 
   void selectGame() {
     gameController = brickController.selectGame() ?? MainMenuController(brickController, () {});
+    brickController.setGameController(gameController);
     isMenuSetted = false;
     gameController.startGame();
   }
@@ -58,6 +60,7 @@ class _GameViewState extends State<GameView> {
     if (brickController.gameState == GameStates.menu) {
       if (!isMenuSetted) {
         gameController = MainMenuController(brickController, selectGame);
+        brickController.setGameController(gameController);
         isMenuSetted = true;
       }
       List<Widget> games = [];
@@ -75,30 +78,15 @@ class _GameViewState extends State<GameView> {
         size: Size(widget.size.width * 0.7, widget.size.height * 0.68),
         painter: GameBoardCell(brickController.gameBoard.board),
       );*/
-      List<Widget> rows = [];
-      List<Widget> cols = [];
-      for (int i = 0; i < row; i++) {
-        for (int j = 0; j < colums; j++) {
-          if (brickController.gameBoard.cellIsOne(i, j)) {
-            cols.add(
-              const Square(
-                width: 27,
-                height: 27,
-              ),
-            );
-          } else {
-            cols.add(
-              const BackgroundSquare(
-                width: 27,
-                height: 27,
-              ),
-            );
-          }
-        }
-        rows.add(Row(children: cols));
-        cols = [];
-      }
-      return Column(children: rows);
+      return Column(
+        children: List.generate(row, (i) {
+          return Row(
+            children: List.generate(colums, (j) {
+              return brickController.gameBoard.cellIsOne(i, j) ? const Square(width: 27, height: 27) : const BackgroundSquare(width: 27, height: 27);
+            }),
+          );
+        }),
+      );
     }
   }
 

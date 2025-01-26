@@ -2,6 +2,7 @@ import 'package:brick_project/core/game_controller.dart';
 import 'package:brick_project/core/interfaces/i_game.dart';
 import 'package:brick_project/core/menu/main_menu_controller.dart';
 import 'package:brick_project/core/size_controller.dart';
+import 'package:brick_project/core/vibrate_controller.dart';
 import 'package:brick_project/utils/colors.dart';
 import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
@@ -29,9 +30,11 @@ class _GameViewState extends State<GameView> {
   bool isMenuSetted = false;
   late BrickController brickController;
   late IGame gameController;
+  late VibrateController vibrateController;
 
   @override
   void initState() {
+    vibrateController = VibrateController();
     brickController = BrickController(update);
     gameController = MainMenuController(brickController, selectGame);
     brickController.setGameController(gameController);
@@ -186,10 +189,22 @@ class _GameViewState extends State<GameView> {
         sizeController: widget.sizeController,
         gamepad: Gamepad(
           sizeController: widget.sizeController,
-          leftButton: () => gameController.left(),
-          topButton: () => gameController.up(),
-          rightButton: () => gameController.right(),
-          bottomButton: () => gameController.down(),
+          leftButton: () {
+            vibrateController.vibrate();
+            gameController.left();
+          },
+          topButton: () {
+            vibrateController.vibrate();
+            gameController.up();
+          },
+          rightButton: () {
+            vibrateController.vibrate();
+            gameController.right();
+          },
+          bottomButton: () {
+            vibrateController.vibrate();
+            gameController.down();
+          },
           rotateButtonDown: () => gameController.rotateButton(true),
           rotateButtonUp: () => gameController.rotateButton(false),
         ),
@@ -199,9 +214,16 @@ class _GameViewState extends State<GameView> {
         level: gameController.getLevel(),
         gamepadActions: GamepadActions(
           sizeController: widget.sizeController,
-          soundHandler: () => brickController.audioSettings.mute(),
-          onOffHandler: () => gameController.shutdownGame(),
+          soundHandler: () {
+            vibrateController.vibrate();
+            brickController.audioSettings.mute();
+          },
+          onOffHandler: () {
+            vibrateController.vibrate();
+            gameController.shutdownGame();
+          },
           resetHandler: () {
+            vibrateController.vibrate();
             if (brickController.gameState != GameStates.menu) {
               gameController.setResetGame(true);
               brickController.audioSettings.stop();
@@ -210,6 +232,7 @@ class _GameViewState extends State<GameView> {
             }
           },
           pauseHandler: () {
+            vibrateController.vibrate();
             if (brickController.gameState == GameStates.pause) {
               gameController.play();
             } else if (brickController.gameState == GameStates.play) {

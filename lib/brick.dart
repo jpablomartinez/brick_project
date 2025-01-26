@@ -15,19 +15,15 @@ class _BrickGamesState extends State<BrickGames> {
 
   @override
   Widget build(BuildContext context) {
-    if (sizeController == null) {
-      Size size = MediaQuery.of(context).size;
-      sizeController = SizeController(size.height, size.width);
-    }
-
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
-        width: sizeController!.screenWidth,
-        height: sizeController!.screenHeight,
+        width: size.width,
+        height: size.height,
         //padding: const EdgeInsets.all(12),
         decoration: const BoxDecoration(color: BrickProjectColors.black),
         child: GameView(
-          sizeController: sizeController!,
+          sizeController: SizeController(size.height, size.width),
         ), //RaceGameView(size: size),
       ),
     );

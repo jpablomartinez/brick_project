@@ -1,5 +1,5 @@
 name: brick_project
-description: 'A new Flutter project.'
+description: 'A Brick Game App'
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -36,6 +36,7 @@ dependencies:
     cupertino_icons: ^1.0.8
     audioplayers: ^6.1.0
     logger: ^2.5.0
+    vibration: ^3.1.1
 
 dev_dependencies:
     flutter_test:

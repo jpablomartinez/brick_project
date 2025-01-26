@@ -1,3 +1,4 @@
+import 'package:brick_project/core/size_controller.dart';
 import 'package:brick_project/widgets/gamepad_button.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,7 @@ class GamepadActions extends StatelessWidget {
   final Function onOffHandler;
   final Function resetHandler;
   final Function pauseHandler;
+  final SizeController sizeController;
 
   const GamepadActions({
     super.key,
@@ -13,6 +15,7 @@ class GamepadActions extends StatelessWidget {
     required this.onOffHandler,
     required this.resetHandler,
     required this.pauseHandler,
+    required this.sizeController,
   });
 
   @override
@@ -22,13 +25,13 @@ class GamepadActions extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () => soundHandler(),
-          child: const Column(
+          child: Column(
             children: [
               GamepadButton(
-                size: Size(35, 35),
-                margin: EdgeInsets.only(right: 12, left: 12, bottom: 4),
+                size: Size((sizeController.cellBoard + 8), (sizeController.cellBoard + 8)),
+                margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
               ),
-              Text(
+              const Text(
                 'SOUND',
                 style: TextStyle(
                   color: Color.fromARGB(255, 226, 231, 233),
@@ -42,13 +45,13 @@ class GamepadActions extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () => onOffHandler(),
-          child: const Column(
+          child: Column(
             children: [
               GamepadButton(
-                size: Size(35, 35),
-                margin: EdgeInsets.only(right: 12, left: 12, bottom: 4),
+                size: Size((sizeController.cellBoard + 8), (sizeController.cellBoard + 8)),
+                margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
               ),
-              Text(
+              const Text(
                 'ON/OFF',
                 style: TextStyle(
                   color: Color.fromARGB(255, 226, 231, 233),
@@ -62,13 +65,13 @@ class GamepadActions extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () => resetHandler(),
-          child: const Column(
+          child: Column(
             children: [
               GamepadButton(
-                size: Size(35, 35),
-                margin: EdgeInsets.only(right: 12, left: 12, bottom: 4),
+                size: Size((sizeController.cellBoard + 8), (sizeController.cellBoard + 8)),
+                margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
               ),
-              Text(
+              const Text(
                 'RESET',
                 style: TextStyle(
                   color: Color.fromARGB(255, 226, 231, 233),
@@ -82,13 +85,13 @@ class GamepadActions extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () => pauseHandler(),
-          child: const Column(
+          child: Column(
             children: [
               GamepadButton(
-                size: Size(35, 35),
-                margin: EdgeInsets.only(right: 12, left: 12, bottom: 4),
+                size: Size((sizeController.cellBoard + 8), (sizeController.cellBoard + 8)),
+                margin: const EdgeInsets.only(right: 12, left: 12, bottom: 4),
               ),
-              Text(
+              const Text(
                 'PAUSE',
                 style: TextStyle(
                   color: Color.fromARGB(255, 226, 231, 233),

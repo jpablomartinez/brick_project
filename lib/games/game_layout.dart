@@ -1,3 +1,4 @@
+import 'package:brick_project/core/size_controller.dart';
 import 'package:brick_project/utils/colors.dart';
 import 'package:brick_project/widgets/game_over.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class GameLayout extends StatelessWidget {
   final int speed;
   final int level;
   final bool gameOver;
+  final SizeController sizeController;
   const GameLayout({
     super.key,
     required this.child,
@@ -21,11 +23,11 @@ class GameLayout extends StatelessWidget {
     required this.speed,
     required this.level,
     required this.gameOver,
+    required this.sizeController,
   });
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Container(
       color: const Color.fromARGB(255, 23, 23, 36),
       padding: const EdgeInsets.all(6),
@@ -48,10 +50,10 @@ class GameLayout extends StatelessWidget {
                 Column(
                   children: [
                     Container(
-                      //height: size.height * 0.67,
-                      height: 540,
-                      width: 270,
-                      //width: size.height * 0.67 / 2,
+                      height: sizeController.areaGameHeight,
+                      //height: 540,
+                      //width: 270,
+                      width: sizeController.areaGameWidth,
                       margin: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -67,7 +69,7 @@ class GameLayout extends StatelessWidget {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    height: size.height * 0.60,
+                    height: sizeController.screenHeight * 0.60,
                     child: Column(
                       children: [
                         Column(
@@ -97,7 +99,7 @@ class GameLayout extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: size.height * 0.05),
+                        SizedBox(height: sizeController.screenHeight * 0.05),
                         Container(
                           alignment: Alignment.centerRight,
                           child: const Text(
@@ -112,7 +114,7 @@ class GameLayout extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         lives,
-                        SizedBox(height: size.height * 0.05),
+                        SizedBox(height: sizeController.screenHeight * 0.05),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -174,7 +176,7 @@ class GameLayout extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: size.height * 0.05),
+                        SizedBox(height: sizeController.screenHeight * 0.05),
                         gameOver ? const GameOverWidget() : const SizedBox(),
                       ],
                     ),
@@ -185,7 +187,7 @@ class GameLayout extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(bottom: 0, top: 16),
-            width: size.width,
+            width: sizeController.screenWidth,
             child: gamepadActions,
           ),
           Container(

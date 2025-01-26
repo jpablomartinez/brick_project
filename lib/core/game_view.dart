@@ -1,6 +1,7 @@
 import 'package:brick_project/core/game_controller.dart';
 import 'package:brick_project/core/interfaces/i_game.dart';
 import 'package:brick_project/core/menu/main_menu_controller.dart';
+import 'package:brick_project/core/size_controller.dart';
 import 'package:brick_project/utils/colors.dart';
 import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
@@ -11,10 +12,11 @@ import 'package:brick_project/widgets/square.dart';
 import 'package:flutter/material.dart';
 
 class GameView extends StatefulWidget {
-  final Size size;
+  final SizeController sizeController;
+
   const GameView({
     super.key,
-    required this.size,
+    required this.sizeController,
   });
 
   @override
@@ -82,7 +84,15 @@ class _GameViewState extends State<GameView> {
         children: List.generate(row, (i) {
           return Row(
             children: List.generate(colums, (j) {
-              return brickController.gameBoard.cellIsOne(i, j) ? const Square(width: 27, height: 27) : const BackgroundSquare(width: 27, height: 27);
+              return brickController.gameBoard.cellIsOne(i, j)
+                  ? Square(
+                      width: (widget.sizeController.cellBoard),
+                      height: (widget.sizeController.cellBoard),
+                    )
+                  : BackgroundSquare(
+                      width: (widget.sizeController.cellBoard),
+                      height: (widget.sizeController.cellBoard),
+                    );
             }),
           );
         }),
@@ -95,16 +105,16 @@ class _GameViewState extends State<GameView> {
     for (int i = 4; i > 0; i--) {
       if (i <= gameController.getLives()) {
         col.add(
-          const Square(
-            width: 27,
-            height: 27,
+          Square(
+            width: widget.sizeController.cellBoard,
+            height: widget.sizeController.cellBoard,
           ),
         );
       } else {
         col.add(
-          const BackgroundSquare(
-            width: 27,
-            height: 27,
+          BackgroundSquare(
+            width: widget.sizeController.cellBoard,
+            height: widget.sizeController.cellBoard,
           ),
         );
       }
@@ -112,23 +122,23 @@ class _GameViewState extends State<GameView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        const Column(
+        Column(
           children: [
             BackgroundSquare(
-              width: 27,
-              height: 27,
+              width: widget.sizeController.cellBoard,
+              height: widget.sizeController.cellBoard,
             ),
             BackgroundSquare(
-              width: 27,
-              height: 27,
+              width: widget.sizeController.cellBoard,
+              height: widget.sizeController.cellBoard,
             ),
             BackgroundSquare(
-              width: 27,
-              height: 27,
+              width: widget.sizeController.cellBoard,
+              height: widget.sizeController.cellBoard,
             ),
             BackgroundSquare(
-              width: 27,
-              height: 27,
+              width: widget.sizeController.cellBoard,
+              height: widget.sizeController.cellBoard,
             ),
           ],
         ),
@@ -138,23 +148,23 @@ class _GameViewState extends State<GameView> {
             Column(children: col),
           ],
         ),
-        const Column(
+        Column(
           children: [
             BackgroundSquare(
-              width: 28,
-              height: 28,
+              width: (widget.sizeController.cellBoard) + 1,
+              height: (widget.sizeController.cellBoard) + 1,
             ),
             BackgroundSquare(
-              width: 28,
-              height: 28,
+              width: (widget.sizeController.cellBoard) + 1,
+              height: (widget.sizeController.cellBoard) + 1,
             ),
             BackgroundSquare(
-              width: 28,
-              height: 28,
+              width: (widget.sizeController.cellBoard) + 1,
+              height: (widget.sizeController.cellBoard) + 1,
             ),
             BackgroundSquare(
-              width: 28,
-              height: 28,
+              width: (widget.sizeController.cellBoard) + 1,
+              height: (widget.sizeController.cellBoard) + 1,
             ),
           ],
         ),
@@ -173,7 +183,9 @@ class _GameViewState extends State<GameView> {
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: GameLayout(
+        sizeController: widget.sizeController,
         gamepad: Gamepad(
+          sizeController: widget.sizeController,
           leftButton: () => gameController.left(),
           topButton: () => gameController.up(),
           rightButton: () => gameController.right(),
@@ -186,6 +198,7 @@ class _GameViewState extends State<GameView> {
         speed: gameController.getSpeed(),
         level: gameController.getLevel(),
         gamepadActions: GamepadActions(
+          sizeController: widget.sizeController,
           soundHandler: () => brickController.audioSettings.mute(),
           onOffHandler: () => gameController.shutdownGame(),
           resetHandler: () {

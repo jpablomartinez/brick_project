@@ -6,10 +6,10 @@ import 'package:brick_project/core/vibrate_controller.dart';
 import 'package:brick_project/utils/colors.dart';
 import 'package:brick_project/utils/constants.dart';
 import 'package:brick_project/games/game_layout.dart';
+import 'package:brick_project/widgets/canvas_game.dart';
 import 'package:brick_project/widgets/game_selector.dart';
 import 'package:brick_project/widgets/gamepad.dart';
 import 'package:brick_project/widgets/gamepad_actions.dart';
-import 'package:brick_project/widgets/square.dart';
 import 'package:flutter/material.dart';
 
 class GameView extends StatefulWidget {
@@ -79,99 +79,19 @@ class _GameViewState extends State<GameView> {
       }
       return Column(children: games);
     } else {
-      /*return CustomPaint(
-        size: Size(widget.size.width * 0.7, widget.size.height * 0.68),
-        painter: GameBoardCell(brickController.gameBoard.board),
-      );*/
-      return Column(
-        children: List.generate(row, (i) {
-          return Row(
-            children: List.generate(colums, (j) {
-              return brickController.gameBoard.cellIsOne(i, j)
-                  ? Square(
-                      width: (widget.sizeController.cellBoard),
-                      height: (widget.sizeController.cellBoard),
-                    )
-                  : BackgroundSquare(
-                      width: (widget.sizeController.cellBoard),
-                      height: (widget.sizeController.cellBoard),
-                    );
-            }),
-          );
-        }),
+      return CustomPaint(
+        size: Size(widget.sizeController.screenWidth * 0.7, widget.sizeController.screenHeight * 0.68),
+        painter: CanvasGame(brickController.gameBoard.board),
       );
     }
   }
 
   Widget renderLives() {
-    List<Widget> col = [];
-    for (int i = 4; i > 0; i--) {
-      if (i <= gameController.getLives()) {
-        col.add(
-          Square(
-            width: widget.sizeController.cellBoard,
-            height: widget.sizeController.cellBoard,
-          ),
-        );
-      } else {
-        col.add(
-          BackgroundSquare(
-            width: widget.sizeController.cellBoard,
-            height: widget.sizeController.cellBoard,
-          ),
-        );
-      }
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Column(
-          children: [
-            BackgroundSquare(
-              width: widget.sizeController.cellBoard,
-              height: widget.sizeController.cellBoard,
-            ),
-            BackgroundSquare(
-              width: widget.sizeController.cellBoard,
-              height: widget.sizeController.cellBoard,
-            ),
-            BackgroundSquare(
-              width: widget.sizeController.cellBoard,
-              height: widget.sizeController.cellBoard,
-            ),
-            BackgroundSquare(
-              width: widget.sizeController.cellBoard,
-              height: widget.sizeController.cellBoard,
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Column(children: col),
-            Column(children: col),
-          ],
-        ),
-        Column(
-          children: [
-            BackgroundSquare(
-              width: (widget.sizeController.cellBoard) + 1,
-              height: (widget.sizeController.cellBoard) + 1,
-            ),
-            BackgroundSquare(
-              width: (widget.sizeController.cellBoard) + 1,
-              height: (widget.sizeController.cellBoard) + 1,
-            ),
-            BackgroundSquare(
-              width: (widget.sizeController.cellBoard) + 1,
-              height: (widget.sizeController.cellBoard) + 1,
-            ),
-            BackgroundSquare(
-              width: (widget.sizeController.cellBoard) + 1,
-              height: (widget.sizeController.cellBoard) + 1,
-            ),
-          ],
-        ),
-      ],
+    //List<List<int>> lives = brickController.renderLivesArray();
+    brickController.renderLivesArray();
+    return CustomPaint(
+      size: Size(widget.sizeController.cellBoard * 4, widget.sizeController.cellBoard * 4),
+      painter: CanvasGame(brickController.lives),
     );
   }
 

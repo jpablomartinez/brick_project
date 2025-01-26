@@ -4,7 +4,7 @@ Brick Project is a mobile app designed to bring back the nostalgia of classic "b
 
 ## Project Features 🎯
 
--   **Included Games**:
+-   **Games to include**:
     -   _Brick Race_: Dodge obstacles and collect points in a fast-paced, classic racing game.
     -   _Snake_: Guide a snake to eat food and grow, but avoid colliding with yourself!
     -   _Tetris_: Strategically place blocks to complete rows and achieve the highest score.
@@ -28,6 +28,13 @@ This project is built with **Flutter**, ensuring versatility and compatibility w
     ```bash
     flutter run
     ```
+
+## TO DO
+
+1. [ ] Add lifecycle for audio settings
+2. [ ] Add lifecycle in game
+3. [ ] Add smooth transition between background songs
+4. [ ] Add audio when screen is restarting
 
 ## Release ⏳
 

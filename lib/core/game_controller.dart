@@ -33,6 +33,8 @@ class BrickController {
   late Timer frameTimer;
   late Function updateView;
   late IGame gameController;
+  int actualLives = 0;
+  List<List<int>> lives = [];
 
   BrickController(Function u) {
     games = [
@@ -53,6 +55,8 @@ class BrickController {
 
   void setGameController(IGame controller) {
     gameController = controller;
+    renderLivesArray();
+    actualLives = gameController.getLives();
   }
 
   /// Handles the game state updates based on the current game state.
@@ -65,8 +69,8 @@ class BrickController {
   ///
   /// [timer] is the periodic timer triggering this method.
   void builder(Timer timer) {
-    //fpsController.calculateFPS();
-    //print(fpsController.fps);
+    fpsController.calculateFPS();
+    print(fpsController.fps);
     switch (gameState) {
       case GameStates.start:
         gameController.handleStartAnimation();
@@ -119,6 +123,22 @@ class BrickController {
       case 2:
       default:
         return null;
+    }
+  }
+
+  ///Maybe is better option has this array in the respective game controller (race, snake, etc)
+  ///and change it when player lost a live
+  void renderLivesArray() {
+    if (actualLives != gameController.getLives()) {
+      lives = [];
+      for (int i = maxLives; i > 0; i--) {
+        if (i <= gameController.getLives()) {
+          lives.add([0, 1, 1, 0]);
+        } else {
+          lives.add([0, 0, 0, 0]);
+        }
+      }
+      actualLives = gameController.getLives();
     }
   }
 }

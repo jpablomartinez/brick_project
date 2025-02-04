@@ -159,6 +159,7 @@ class _GameViewState extends State<GameView> {
               gameController.pause(brickController);
             }
           },
+          gameStates: brickController.gameState,
         ),
         gameOver: brickController.gameState == GameStates.gameover,
         child: Container(

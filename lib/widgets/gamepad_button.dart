@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class GamepadButton extends StatelessWidget {
   final Size size;
   final EdgeInsetsGeometry margin;
+  final Widget icon;
 
   const GamepadButton({
     super.key,
     required this.size,
     required this.margin,
+    this.icon = const SizedBox(),
   });
 
   @override
@@ -33,6 +35,9 @@ class GamepadButton extends StatelessWidget {
             spreadRadius: 5,
           ),
         ],
+      ),
+      child: Center(
+        child: icon,
       ),
     );
   }

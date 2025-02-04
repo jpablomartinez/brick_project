@@ -29,17 +29,18 @@ class Gamepad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(
-          width: sizeController.screenWidth * 0.42,
-          height: sizeController.screenWidth * 0.42 + 20,
+          width: sizeController.screenWidth * 0.48,
+          height: sizeController.screenWidth * 0.45 + 20,
           child: Stack(
             children: [
               //top button
               Positioned(
                 top: 0,
-                left: sizeController.screenWidth * 0.42 / 3,
-                right: sizeController.screenWidth * 0.42 / 3,
+                left: sizeController.screenWidth * 0.48 / 3,
+                right: sizeController.screenWidth * 0.48 / 3,
                 child: GestureDetector(
                   onTap: () => topButton(),
                   child: Column(
@@ -55,7 +56,7 @@ class Gamepad extends StatelessWidget {
                       ),
                       GamepadButton(
                         margin: const EdgeInsets.only(top: 4),
-                        size: Size((sizeController.cellBoard + 12), (sizeController.cellBoard + 12)),
+                        size: Size((sizeController.cellBoard + 24), (sizeController.cellBoard + 24)),
                       )
                     ],
                   ),
@@ -64,15 +65,15 @@ class Gamepad extends StatelessWidget {
               //bottom button
               Positioned(
                 bottom: 4,
-                left: sizeController.screenWidth * 0.42 / 3,
-                right: sizeController.screenWidth * 0.42 / 3,
+                left: sizeController.screenWidth * 0.48 / 3,
+                right: sizeController.screenWidth * 0.48 / 3,
                 child: GestureDetector(
                   onTap: () => bottomButton(),
                   child: Column(
                     children: [
                       GamepadButton(
                         margin: const EdgeInsets.only(bottom: 4),
-                        size: Size((sizeController.cellBoard + 12), (sizeController.cellBoard + 12)),
+                        size: Size((sizeController.cellBoard + 24), (sizeController.cellBoard + 24)),
                       ),
                       const Text(
                         'BOTTOM',
@@ -88,11 +89,10 @@ class Gamepad extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: sizeController.screenWidth * 0.42 / 2 + 4,
-                left: sizeController.screenWidth * 0.42 / sizeController.gamepadButtonsFactor,
-                right: sizeController.screenWidth * 0.42 / sizeController.gamepadButtonsFactor,
+                top: sizeController.screenWidth * 0.5 / 2 - 3,
+                left: sizeController.screenWidth * 0.5 / sizeController.gamepadButtonsFactor,
+                right: sizeController.screenWidth * 0.5 / sizeController.gamepadButtonsFactor,
                 child: Container(
-                  width: sizeController.screenWidth * 0.42 / 3,
                   height: 3,
                   color: const Color.fromARGB(255, 226, 231, 233),
                 ),
@@ -107,7 +107,7 @@ class Gamepad extends StatelessWidget {
                     children: [
                       GamepadButton(
                         margin: const EdgeInsets.only(bottom: 4),
-                        size: Size((sizeController.cellBoard + 12), (sizeController.cellBoard + 12)),
+                        size: Size((sizeController.cellBoard + 24), (sizeController.cellBoard + 24)),
                       ),
                       const Text(
                         'LEFT',
@@ -132,7 +132,7 @@ class Gamepad extends StatelessWidget {
                     children: [
                       GamepadButton(
                         margin: const EdgeInsets.only(bottom: 4),
-                        size: Size((sizeController.cellBoard + 12), (sizeController.cellBoard + 12)),
+                        size: Size((sizeController.cellBoard + 24), (sizeController.cellBoard + 24)),
                       ),
                       const Text(
                         'RIGHT',
@@ -148,9 +148,9 @@ class Gamepad extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: (sizeController.screenWidth * 0.42) / 2 + 4,
-                left: sizeController.screenWidth * 0.42 / sizeController.gamepadButtonsFactor,
-                right: sizeController.screenWidth * 0.42 / sizeController.gamepadButtonsFactor,
+                top: (sizeController.screenWidth * 0.5) / 2 - 3,
+                left: sizeController.screenWidth * 0.5 / sizeController.gamepadButtonsFactor,
+                right: sizeController.screenWidth * 0.5 / sizeController.gamepadButtonsFactor,
                 child: Transform.rotate(
                   angle: math.pi / 2,
                   child: Container(
@@ -162,16 +162,13 @@ class Gamepad extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
-          width: sizeController.screenWidth * 0.28,
-        ),
         GestureDetector(
           onTapDown: (_) => rotateButtonDown(),
           onTapUp: (_) => rotateButtonUp(),
           child: Column(
             children: [
               GamepadButton(
-                size: Size((sizeController.cellBoard + 45), (sizeController.cellBoard + 45)),
+                size: Size((sizeController.cellBoard + 55), (sizeController.cellBoard + 55)),
                 margin: const EdgeInsets.symmetric(vertical: 8),
               ),
               const Text(

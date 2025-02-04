@@ -34,7 +34,12 @@ class GameLayout extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(
-            height: 60,
+            height: 50,
+          ),
+          Container(
+            margin: const EdgeInsets.only(bottom: 0, top: 8),
+            width: sizeController.screenWidth,
+            child: gamepadActions,
           ),
           Container(
             decoration: BoxDecoration(
@@ -186,15 +191,10 @@ class GameLayout extends StatelessWidget {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(bottom: 0, top: 16),
-            width: sizeController.screenWidth,
-            child: gamepadActions,
-          ),
-          Container(
             padding: const EdgeInsets.only(
-              left: 12,
+              left: 20,
               right: 12,
-              top: 4,
+              top: 12,
             ),
             child: gamepad,
           ),

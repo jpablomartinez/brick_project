@@ -17,7 +17,7 @@ class AudioSettings implements IAudio {
 
   late Queue _backgroundSongs;
 
-  bool _audioOn = true;
+  bool _audioOn = false;
 
   AudioSettings() {
     _background.setVolume(_defaultBackgroundVolume);

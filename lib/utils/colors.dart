@@ -5,4 +5,5 @@ class BrickProjectColors {
   static const background = Color.fromRGBO(161, 170, 148, 1);
   static const yellow = Color.fromARGB(255, 223, 207, 87);
   static const borderYellow = Color.fromARGB(255, 200, 182, 70);
+  static const yellowIcon = Color.fromARGB(255, 156, 141, 50);
 }

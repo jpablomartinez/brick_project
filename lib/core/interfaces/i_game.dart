@@ -121,4 +121,5 @@ abstract class IGame {
   void handleRestartViewState();
   void setResetGame(bool value);
   void shutdownGame();
+  void handleWinGame();
 }

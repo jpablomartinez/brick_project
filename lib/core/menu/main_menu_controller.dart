@@ -190,4 +190,7 @@ class MainMenuController extends IGame {
   void shutdownGame() {
     //
   }
+
+  @override
+  void handleWinGame() {}
 }

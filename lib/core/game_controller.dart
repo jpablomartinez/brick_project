@@ -41,7 +41,6 @@ class BrickController {
     games = [
       Game('race', true),
       Game('snake', false),
-      Game('tetris', false),
     ];
     audioSettings = AudioSettings();
     audioSettings.addBackgroundSongs(['audios/background1.mp3', 'audios/background3.mp3']);
@@ -88,6 +87,8 @@ class BrickController {
       case GameStates.gameover:
         gameController.handleGameOver();
         break;
+      case GameStates.win:
+        gameController.handleWinGame();
       default:
         break;
     }

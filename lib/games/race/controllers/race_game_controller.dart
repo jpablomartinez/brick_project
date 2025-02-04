@@ -387,4 +387,7 @@ class RaceGameController extends IGame {
     brickController.audioSettings.stop();
     brickController.gameState = GameStates.restartView;
   }
+
+  @override
+  void handleWinGame() {}
 }

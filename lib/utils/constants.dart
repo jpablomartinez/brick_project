@@ -19,6 +19,7 @@ enum GameStates {
 
 const int maxLivesRace = 4;
 const int maxLivesSnake = 1;
+const int snakeMaxPoints = 50;
 const int raceCarGameSecondsPerLevel_1 = 20;
 const int raceCarGameSecondsPerLevel_2 = 45;
 const int raceCarGameSecondsPerLevel_3 = 75;

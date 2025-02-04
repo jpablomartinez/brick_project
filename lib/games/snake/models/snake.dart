@@ -17,6 +17,7 @@ class SnakeBody {
 }
 
 class Snake {
+  int eatenApples = 0;
   late List<SnakeBody> body;
   late GameBoard gameBoard;
   late SnakeDirection direction;
@@ -39,11 +40,12 @@ class Snake {
 
   void eat(Apple apple) {
     if (body.first.row == apple.row && body.first.column == apple.column) {
+      apple.hideApple();
+      apple.getNewPosition();
       int rowLast = body.last.row;
       int colLast = body.last.column;
       body.add(SnakeBody(rowLast, colLast));
-      apple.getNewPosition();
-      //gameBoard.board[apple.row][apple.column] = 0;
+      eatenApples++;
     }
   }
 
@@ -70,8 +72,8 @@ class Snake {
 
   void move(Apple apple) {
     clear();
-    eat(apple);
     swapBody();
+    eat(apple);
     switch (direction) {
       case SnakeDirection.left:
         if (body[0].column - 1 >= 0) {

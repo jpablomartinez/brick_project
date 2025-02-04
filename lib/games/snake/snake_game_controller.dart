@@ -10,12 +10,12 @@ class SnakeGameControler extends IGame {
   int lives = maxLivesSnake;
   double gameTime = 0;
   double startTime = 0;
-  int points = 0;
   double updateTime = 0;
+  double winTime = 0;
   bool isForceReset = true;
   bool isGameOn = true;
   int actualRow = row;
-
+  int points = 0;
   late BrickController brickController;
   late CollisionController collisionController;
   late Snake snake;
@@ -57,7 +57,9 @@ class SnakeGameControler extends IGame {
 
   @override
   void checkWin() {
-    // TODO: implement checkWin
+    if (points == snakeMaxPoints) {
+      brickController.gameState = GameStates.win;
+    }
   }
 
   @override
@@ -127,8 +129,12 @@ class SnakeGameControler extends IGame {
       snake.move(apple);
       updateTime = 0;
     }
+    if (apple.hide) {
+      apple.putAppleInBoard();
+    }
     checkCollision();
     updatePoints();
+    checkWin();
   }
 
   @override
@@ -141,7 +147,7 @@ class SnakeGameControler extends IGame {
         actualRow = row;
         brickController.restartController.resetRestartTime();
         if (isGameOn) {
-          if (checkGameOver()) {
+          if (checkGameOver() || points == snakeMaxPoints) {
             brickController.gameState = GameStates.gameover;
             brickController.audioSettings.stop();
             brickController.audioSettings.playSfx('audios/game_over.mp3');
@@ -204,29 +210,19 @@ class SnakeGameControler extends IGame {
   }
 
   @override
-  void rotateButton(bool value) {
-    // TODO: implement rotateButton
-  }
+  void rotateButton(bool value) {}
 
   @override
-  void setAudioSettings() {
-    // TODO: implement setAudioSettings
-  }
+  void setAudioSettings() {}
 
   @override
-  void setLevel(int value) {
-    // TODO: implement setLevel
-  }
+  void setLevel(int value) {}
 
   @override
-  void setLives(int value) {
-    // TODO: implement setLives
-  }
+  void setLives(int value) {}
 
   @override
-  void setPoints(int value) {
-    // TODO: implement setPoints
-  }
+  void setPoints(int value) {}
 
   @override
   void setResetGame(bool value) {
@@ -234,9 +230,7 @@ class SnakeGameControler extends IGame {
   }
 
   @override
-  void setSpeed(int value) {
-    // TODO: implement setSpeed
-  }
+  void setSpeed(int value) {}
 
   @override
   void shutdownGame() {
@@ -258,8 +252,19 @@ class SnakeGameControler extends IGame {
 
   @override
   void updatePoints() {
-    if ((gameTime / 1000).floor() > points) {
+    /*if ((gameTime / 1000).floor() > points) {
       points++;
+    }*/
+    points = snake.eatenApples;
+  }
+
+  @override
+  void handleWinGame() {
+    winTime += (1000 * fps);
+    if (winTime > 2000) {
+      winTime = 0;
+      isForceReset = false;
+      brickController.gameState = GameStates.restartView;
     }
   }
 }

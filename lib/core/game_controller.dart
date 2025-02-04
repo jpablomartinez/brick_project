@@ -6,6 +6,7 @@ import 'package:brick_project/core/game_board.dart';
 import 'package:brick_project/core/interfaces/i_game.dart';
 import 'package:brick_project/core/restart_controller.dart';
 import 'package:brick_project/games/race/controllers/race_game_controller.dart';
+import 'package:brick_project/games/snake/snake_game_controller.dart';
 import 'package:brick_project/utils/constants.dart';
 
 class Game {
@@ -69,8 +70,8 @@ class BrickController {
   ///
   /// [timer] is the periodic timer triggering this method.
   void builder(Timer timer) {
-    fpsController.calculateFPS();
-    print(fpsController.fps);
+    //fpsController.calculateFPS();
+    //print(fpsController.fps);
     switch (gameState) {
       case GameStates.start:
         gameController.handleStartAnimation();
@@ -120,6 +121,7 @@ class BrickController {
       case 0:
         return RaceGameController(this);
       case 1:
+        return SnakeGameControler(this);
       case 2:
       default:
         return null;
@@ -131,7 +133,7 @@ class BrickController {
   void renderLivesArray() {
     if (actualLives != gameController.getLives()) {
       lives = [];
-      for (int i = maxLives; i > 0; i--) {
+      for (int i = maxLivesRace; i > 0; i--) {
         if (i <= gameController.getLives()) {
           lives.add([0, 1, 1, 0]);
         } else {

@@ -7,7 +7,7 @@ class GameBoard {
   List<List<int>> board = [];
 
   void _buildGameBoard() {
-    board = List.generate(row, (_) => List.filled(colums, 0));
+    board = List.generate(row, (_) => List.filled(columns, 0));
   }
 
   bool cellIsOne(int row, int col) {

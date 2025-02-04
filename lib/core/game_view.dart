@@ -154,9 +154,9 @@ class _GameViewState extends State<GameView> {
           pauseHandler: () {
             vibrateController.vibrate();
             if (brickController.gameState == GameStates.pause) {
-              gameController.play();
+              gameController.play(brickController);
             } else if (brickController.gameState == GameStates.play) {
-              gameController.pause();
+              gameController.pause(brickController);
             }
           },
         ),

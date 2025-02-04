@@ -1,6 +1,6 @@
 const double fps = 1 / 60;
 const int row = 20;
-const int colums = 10;
+const int columns = 10;
 
 const int left = 3;
 const int right = 6;
@@ -17,7 +17,8 @@ enum GameStates {
   none,
 }
 
-const int maxLives = 4;
+const int maxLivesRace = 4;
+const int maxLivesSnake = 1;
 const int raceCarGameSecondsPerLevel_1 = 20;
 const int raceCarGameSecondsPerLevel_2 = 45;
 const int raceCarGameSecondsPerLevel_3 = 75;

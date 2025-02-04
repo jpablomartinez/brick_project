@@ -7,14 +7,14 @@ import 'package:brick_project/games/race/controllers/street_controller.dart';
 import 'package:brick_project/games/race/models/car.dart';
 import 'package:brick_project/games/race/models/npc_car.dart';
 
-class RaceGameController implements IGame {
+class RaceGameController extends IGame {
   int level = 1;
   int speed = 1;
   int leftSpawn = 0;
   int rightSpawn = 0;
   bool accelerate = false;
   int points = 0;
-  int lives = maxLives;
+  int lives = maxLivesRace;
   double updateTime = 0;
   double gameTime = 0;
   double startTime = 0;
@@ -45,13 +45,6 @@ class RaceGameController implements IGame {
     setAudioSettings();
   }
 
-  /// Initializes and starts the race game.
-  ///
-  /// This method sets up the game board, initializes controllers, and places
-  /// game elements on the board. It also sets the game state to play and
-  /// begins the game update loop.
-  ///
-  /// [frameUpdate] is a callback function that updates the game view.
   @override
   void startGame() {
     streetController = StreetController();
@@ -63,13 +56,9 @@ class RaceGameController implements IGame {
     brickController.gameState = GameStates.start;
   }
 
-  /// Resets the game state to its initial values.
-  ///
-  /// This method reinitializes the game variables such as lives, game time,
-  /// points, speed, level, and acceleration status to their starting values.
   @override
   void restart() {
-    lives = maxLives;
+    lives = maxLivesRace;
     gameTime = 0;
     points = 0;
     speed = 1;
@@ -77,10 +66,6 @@ class RaceGameController implements IGame {
     accelerate = false;
   }
 
-  /// Updates the player's points based on the elapsed game time.
-  ///
-  /// Increments the points by 1 if the integer value of the game time
-  /// in seconds exceeds the current points.
   @override
   void updatePoints() {
     if ((gameTime / 1000).floor() > points) {
@@ -88,8 +73,6 @@ class RaceGameController implements IGame {
     }
   }
 
-  /// Updates the game level based on elapsed game time.
-  ///
   /// This method iterates through the levels and checks if the current
   /// level matches a predefined level and if the elapsed game time in
   /// seconds matches the corresponding time for that level. If both
@@ -107,13 +90,6 @@ class RaceGameController implements IGame {
     }
   }
 
-  /// Handles the play state of the race game.
-  ///
-  /// This method updates the game time and manages the movement of NPC cars
-  /// based on the current speed and acceleration status. It checks for collisions,
-  /// game over conditions, and winning conditions, and updates the game level
-  /// and player points accordingly. The street and car positions are updated
-  /// periodically based on the local speed.
   @override
   void handlePlayState() {
     updateTime++;
@@ -170,13 +146,6 @@ class RaceGameController implements IGame {
     }
   }
 
-  /// Handles the restart view state of the race game.
-  ///
-  /// This method increments the restart time and checks if the duration
-  /// is complete. If complete, it triggers the restart animation and
-  /// resets the restart time. Once the animation reaches the initial row,
-  /// it resets the row, places elements back on the board, and changes
-  /// the game state to play.
   @override
   void handleRestartViewState() {
     brickController.restartController.restartTime += (1000 * fps);
@@ -215,14 +184,6 @@ class RaceGameController implements IGame {
     }
   }
 
-  /// Handles the collision state of the race game.
-  ///
-  /// This method updates the collision time and checks if the collision
-  /// time is complete. If complete, it triggers the collision animation
-  /// and resets the collision time. It also checks if the collision
-  /// animation frame or the entire animation is complete, and updates
-  /// the game state to restart view if necessary. Additionally, it
-  /// resets the player's position and collision animation state.
   @override
   void handleCollisionState() {
     collisionController.collisionTime += (1000 * fps);
@@ -240,12 +201,6 @@ class RaceGameController implements IGame {
     }
   }
 
-  /// Handles the game over state by updating the street and NPC cars.
-  ///
-  /// This method increments the update time and checks if it meets or exceeds
-  /// the local speed threshold. If so, it updates the street and moves NPC cars
-  /// that are ready. It also resets the update time and starts the next car
-  /// in sequence if conditions are met.
   @override
   void handleGameOver() {
     updateTime++;
@@ -277,7 +232,7 @@ class RaceGameController implements IGame {
   void checkCollision() {
     bool collision = false;
     for (int i = 16; i < row && !collision; i++) {
-      for (int j = 0; j < colums; j++) {
+      for (int j = 0; j < columns; j++) {
         if (brickController.gameBoard.board[i][j] == 2) {
           brickController.gameState = GameStates.collision;
           lives--;
@@ -289,21 +244,11 @@ class RaceGameController implements IGame {
     }
   }
 
-  /// Checks if the game is over by evaluating the player's lives.
-  ///
-  /// If the player's lives are reduced to zero, the game state is set
-  /// to `gameover`, indicating the end of the game.
   @override
   bool checkGameOver() {
     return lives == 0;
   }
 
-  /// Checks if the player has won the game.
-  ///
-  /// This method evaluates the current level and game time to determine
-  /// if the win condition is met. If the player reaches level 10 and the
-  /// elapsed game time matches the predefined time for level 10, the game
-  /// state is set to `win`.
   @override
   void checkWin() {
     if (level == 10 && (gameTime / 1000).floor() == raceCarGameSecondsPerLevel_10) {
@@ -311,10 +256,6 @@ class RaceGameController implements IGame {
     }
   }
 
-  /// Moves the player's car to the left.
-  ///
-  /// This method checks if the game is currently in the play state
-  /// and, if so, instructs the player's car to move left.
   @override
   void left() {
     if (brickController.gameState == GameStates.play) {
@@ -323,10 +264,6 @@ class RaceGameController implements IGame {
     }
   }
 
-  /// Moves the player's car to the right.
-  ///
-  /// This method checks if the game is currently in the play state
-  /// and, if so, instructs the player's car to move right.
   @override
   void right() {
     if (brickController.gameState == GameStates.play) {
@@ -352,25 +289,17 @@ class RaceGameController implements IGame {
     accelerate = value;
   }
 
-  /// Pauses the race game.
-  ///
-  /// This method sets the game state to `pause`, halting all game
-  /// activities until the game is resumed.
-  @override
+  /*@override
   void pause() {
     brickController.gameState = GameStates.pause;
     brickController.audioSettings.pause();
-  }
+  }*/
 
-  /// Sets the game state to 'play'.
-  ///
-  /// This method changes the current game state to 'play', allowing
-  /// the game to resume or continue its active state.
-  @override
+  /*@override
   void play() {
     brickController.gameState = GameStates.play;
     brickController.audioSettings.resume();
-  }
+  }*/
 
   /// Places game elements on the game board.
   ///

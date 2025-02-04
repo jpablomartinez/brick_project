@@ -22,7 +22,7 @@ class RestartController {
   /// - `localRow`: The row index used to determine which row to fill.
   void fullBoard(List<List<int>> board, int localRow) {
     for (int i = localRow - 1; i > localRow - 2; i--) {
-      for (int j = 0; j < colums; j++) {
+      for (int j = 0; j < columns; j++) {
         board[i][j] = 1;
       }
     }
@@ -39,7 +39,7 @@ class RestartController {
   /// - `localRow`: The row index used to determine which row to clear.
   void cleanBoard(List<List<int>> board, int localRow) {
     for (int i = localRow * -1; i < (localRow * -1) + 1 && (localRow * -1) < row; i++) {
-      for (int j = 0; j < colums; j++) {
+      for (int j = 0; j < columns; j++) {
         board[i][j] = 0;
       }
     }

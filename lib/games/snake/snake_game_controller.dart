@@ -31,7 +31,7 @@ class SnakeGameControler extends IGame {
     apple = Apple(
       appleRow,
       appleCol,
-      brickController.gameBoard,
+      brickController.gameBoard.board,
     );
     int snakeHeadRow = 5;
     int snakeHeadColumn = 4;
@@ -130,7 +130,7 @@ class SnakeGameControler extends IGame {
       updateTime = 0;
     }
     if (apple.hide) {
-      apple.putAppleInBoard();
+      apple.putAppleInBoard(brickController.gameBoard.board);
     }
     checkCollision();
     updatePoints();
@@ -181,6 +181,7 @@ class SnakeGameControler extends IGame {
   void handleStartAnimation() {
     startTime += (1000 * fps);
     if (startTime > 2000) {
+      brickController.gameBoard.printBoard();
       startTime = 0;
       brickController.gameState = GameStates.play;
       isForceReset = false;

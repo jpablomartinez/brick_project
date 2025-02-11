@@ -110,19 +110,19 @@ class _GameViewState extends State<GameView> {
         gamepad: Gamepad(
           sizeController: widget.sizeController,
           leftButton: () {
-            vibrateController.vibrate();
+            //vibrateController.vibrate();
             gameController.left();
           },
           topButton: () {
-            vibrateController.vibrate();
+            //vibrateController.vibrate();
             gameController.up();
           },
           rightButton: () {
-            vibrateController.vibrate();
+            //vibrateController.vibrate();
             gameController.right();
           },
           bottomButton: () {
-            vibrateController.vibrate();
+            //vibrateController.vibrate();
             gameController.down();
           },
           rotateButtonDown: () => gameController.rotateButton(true),

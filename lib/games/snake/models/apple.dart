@@ -1,23 +1,25 @@
 import 'dart:math' as math;
+import 'package:brick_project/games/snake/models/snake.dart';
 import 'package:brick_project/utils/constants.dart' as constants;
-import 'package:brick_project/core/game_board.dart';
+import 'package:logger/web.dart';
 
 class Apple {
   int row;
   int column;
-  late GameBoard gameBoard;
+
   bool hide = true;
+  var logger = Logger();
 
   Apple(
     this.row,
     this.column,
-    this.gameBoard,
+    List<List<int>> board,
   ) {
-    putAppleInBoard();
+    putAppleInBoard(board);
   }
 
-  void putAppleInBoard() {
-    gameBoard.board[row][column] = 1;
+  void putAppleInBoard(List<List<int>> board) {
+    board[row][column] = 1;
     hide = false;
   }
 
@@ -26,23 +28,22 @@ class Apple {
     column = c;
   }
 
-  void hideApple() {
+  void hideApple(List<List<int>> board) {
     hide = true;
-    gameBoard.board[row][column] = 0;
+    board[row][column] = 0;
   }
 
-  void getNewPosition() {
+  void getNewPosition(List<SnakeBody> body) {
     //get random row
     //get empty column
     int r = math.Random().nextInt(constants.row);
-    List<int> candidates = [];
-    for (int i = 0; i < gameBoard.board[r].length; i++) {
-      if (gameBoard.board[r][i] == 0) {
-        candidates.add(i);
-      }
+    int c = math.Random().nextInt(constants.columns);
+    while (body.indexWhere((b) => b.row == r && b.column == c) != -1) {
+      r = math.Random().nextInt(constants.row);
+      c = math.Random().nextInt(constants.columns);
     }
-    int index = math.Random().nextInt(candidates.length);
-    changePosition(r, candidates[index]);
-    //putAppleInBoard(r, candidates[index]);
+
+    logger.d('[LOG] \n Row: $r Column: $c \n NEW POSITION: ($r,$c})');
+    changePosition(r, c);
   }
 }

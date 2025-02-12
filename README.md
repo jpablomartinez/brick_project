@@ -34,3 +34,7 @@ This project is built with **Flutter**, ensuring versatility and compatibility w
 2. [ ] Add lifecycle in game
 3. [ ] Add smooth transition between background songs
 4. [ ] Add audio when screen is restarting
+
+## Sample 🎮
+
+![Alt Text](/assets/0212.gif)

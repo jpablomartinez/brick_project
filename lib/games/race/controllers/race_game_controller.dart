@@ -256,7 +256,7 @@ class RaceGameController extends IGame {
 
   @override
   void checkWin() {
-    if (level == 2 && (gameTime / 1000).floor() == raceCarGameSecondsPerLevel_2) {
+    if (level == 10 && (gameTime / 1000).floor() == raceCarGameSecondsPerLevel_10) {
       win = true;
       brickController.audioSettings.stop();
       brickController.audioSettings.playSfx('audios/win_2.mp3');

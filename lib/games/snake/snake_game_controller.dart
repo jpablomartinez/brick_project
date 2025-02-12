@@ -58,6 +58,8 @@ class SnakeGameControler extends IGame {
   @override
   void checkWin() {
     if (points == snakeMaxPoints) {
+      brickController.audioSettings.stop();
+      brickController.audioSettings.playSfx('audios/win_1.mp3');
       brickController.gameState = GameStates.win;
     }
   }
@@ -150,7 +152,8 @@ class SnakeGameControler extends IGame {
           if (checkGameOver() || points == snakeMaxPoints) {
             brickController.gameState = GameStates.gameover;
             brickController.audioSettings.stop();
-            brickController.audioSettings.playSfx('audios/game_over.mp3');
+            //ugly
+            if (points != snakeMaxPoints) brickController.audioSettings.playSfx('audios/game_over.mp3');
             snake = Snake(
               0,
               2,

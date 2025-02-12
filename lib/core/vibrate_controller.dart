@@ -8,7 +8,7 @@ class VibrateController {
   Future<void> vibrate() async {
     bool canVibrate = await Vibration.hasVibrator();
     if (canVibrate) {
-      Vibration.vibrate(duration: 100, preset: VibrationPreset.singleShortBuzz);
+      Vibration.vibrate(duration: 50, preset: VibrationPreset.singleShortBuzz);
     } else {
       _logger.d('Device has not vibration support');
     }

@@ -13,11 +13,13 @@ class RaceGameController extends IGame {
   int leftSpawn = 0;
   int rightSpawn = 0;
   bool accelerate = false;
+  bool win = false;
   int points = 0;
   int lives = maxLivesRace;
   double updateTime = 0;
   double gameTime = 0;
   double startTime = 0;
+  double winTime = 0;
   bool full = true;
   bool forceReset = false;
   bool isGameOn = true;
@@ -47,6 +49,7 @@ class RaceGameController extends IGame {
 
   @override
   void startGame() {
+    win = false;
     streetController = StreetController();
     collisionController = CollisionController();
     player = Car(brickController.gameBoard);
@@ -64,6 +67,7 @@ class RaceGameController extends IGame {
     speed = 1;
     level = 1;
     accelerate = false;
+    win = false;
   }
 
   @override
@@ -156,10 +160,11 @@ class RaceGameController extends IGame {
         actualRow = row;
         brickController.restartController.resetRestartTime();
         if (isGameOn) {
-          if (checkGameOver()) {
+          if (checkGameOver() || win) {
             brickController.gameState = GameStates.gameover;
             brickController.audioSettings.stop();
-            brickController.audioSettings.playSfx('audios/game_over.mp3');
+            //ugly
+            if (checkGameOver()) brickController.audioSettings.playSfx('audios/game_over.mp3');
             streetController.create(brickController.gameBoard.board);
             int first = math.Random().nextInt(10);
             int second = math.Random().nextInt(10);
@@ -251,7 +256,10 @@ class RaceGameController extends IGame {
 
   @override
   void checkWin() {
-    if (level == 10 && (gameTime / 1000).floor() == raceCarGameSecondsPerLevel_10) {
+    if (level == 2 && (gameTime / 1000).floor() == raceCarGameSecondsPerLevel_2) {
+      win = true;
+      brickController.audioSettings.stop();
+      brickController.audioSettings.playSfx('audios/win_2.mp3');
       brickController.gameState = GameStates.win;
     }
   }
@@ -288,18 +296,6 @@ class RaceGameController extends IGame {
   void rotateButton(bool value) {
     accelerate = value;
   }
-
-  /*@override
-  void pause() {
-    brickController.gameState = GameStates.pause;
-    brickController.audioSettings.pause();
-  }*/
-
-  /*@override
-  void play() {
-    brickController.gameState = GameStates.play;
-    brickController.audioSettings.resume();
-  }*/
 
   /// Places game elements on the game board.
   ///
@@ -389,5 +385,12 @@ class RaceGameController extends IGame {
   }
 
   @override
-  void handleWinGame() {}
+  void handleWinGame() {
+    winTime += (1000 * fps);
+    if (winTime > 2000) {
+      winTime = 0;
+      forceReset = false;
+      brickController.gameState = GameStates.restartView;
+    }
+  }
 }
